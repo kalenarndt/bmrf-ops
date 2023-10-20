@@ -1,0 +1,82 @@
+---
+version: "3"
+
+tasks:
+
+  verify:
+    desc: Verify flux meets the prerequisites
+    cmds:
+      - flux check --pre
+
+  apply:
+    desc: Apply a resource path that contains Flux substitution variables
+    dotenv: ['{{.CLUSTER_SETTINGS_FILE}}']
+    vars:
+      ks: '{{ or .ks (fail "Missing path (`ks` var)") }}'
+    cmd: |
+      sops exec-env {{.CLUSTER_SECRETS_FILE}} \
+        "kustomize build --load-restrictor=LoadRestrictionsNone {{.ks}} | \
+          envsubst | kubectl apply --server-side --field-manager=kustomize-controller -f -"
+    preconditions:
+      - sh: test -f {{.CLUSTER_SECRETS_FILE}}
+      - sh: test -f {{.CLUSTER_SETTINGS_FILE}}
+
+  install:
+    desc: Install Flux into your cluster, run this again if it fails
+    cmds:
+      - kubectl apply --server-side --kustomize {{.ROOT_DIR}}/kubernetes/bootstrap/flux
+      - sops --decrypt {{.ROOT_DIR}}/kubernetes/bootstrap/flux/age-key.sops.yaml | kubectl apply -f -
+      - sops --decrypt {{.ROOT_DIR}}/kubernetes/bootstrap/flux/github-deploy-key.sops.yaml | kubectl apply -f -
+      - sops --decrypt {{.ROOT_DIR}}/kubernetes/flux/vars/cluster-secrets.sops.yaml | kubectl apply -f -
+      - kubectl apply -f {{.ROOT_DIR}}/kubernetes/flux/vars/cluster-settings.yaml
+
+  kickoff:
+    desc: Kicks off Flux applying the repository
+    cmds:
+      - kubectl apply --server-side --kustomize {{.ROOT_DIR}}/kubernetes/flux/config
+
+  gr-sync:
+    desc: Sync all Flux GitRepositories
+    cmds:
+      - |
+        kubectl get gitrepositories --all-namespaces --no-headers | awk '{print $1, $2}' \
+          | xargs -P 4 -L 1 bash -c \
+            'kubectl -n $0 annotate gitrepository/$1 reconcile.fluxcd.io/requestedAt=$(date +%s) --field-manager=flux-client-side-apply --overwrite'
+
+  ks-sync:
+    desc: Sync all Flux Kustomizations
+    cmds:
+      - |
+        kubectl get kustomization --all-namespaces --no-headers | awk '{print $1, $2}' \
+          | xargs -P 4 -L 1 bash -c \
+            'kubectl -n $0 annotate kustomization/$1 reconcile.fluxcd.io/requestedAt="$(date +%s)" --field-manager=flux-client-side-apply --overwrite'
+
+  hr-sync:
+    desc: Sync all Flux HelmReleases
+    cmds:
+      - |
+        kubectl get helmreleases --all-namespaces --no-headers | awk '{print $1, $2}' \
+          | xargs -P 4 -L 1 bash -c \
+            'kubectl -n $0 annotate helmrelease/$1 reconcile.fluxcd.io/requestedAt="$(date +%s)" --overwrite'
+
+  tf-sync:
+    desc: Sync Flux Terraform
+    cmds:
+      - |
+        kubectl get terraforms --all-namespaces --no-headers | awk '{print $1, $2}' \
+          | xargs -P 4 -L 1 bash -c \
+            'kubectl -n $0 annotate terraform/$1 reconcile.fluxcd.io/requestedAt="$(date +%s)" --overwrite'
+
+  hr-suspend:
+    desc: Suspend all Flux HelmReleases
+    cmds:
+      - |
+        flux get helmrelease --all-namespaces --no-header | awk '{print $1, $2}' \
+          | xargs -L 1 bash -c 'flux -n $0 suspend helmrelease $1'
+
+  hr-resume:
+    desc: Resume all Flux HelmReleases
+    cmds:
+      - |
+        flux get helmrelease --all-namespaces --no-header | awk '{print $1, $2}' \
+          | xargs -L 1 bash -c 'flux -n $0 resume helmrelease $1'

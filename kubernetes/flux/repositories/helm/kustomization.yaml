@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - bjw-s.yaml
+  - cloudnative-pg.yaml
+  - descheduler.yaml
+  - external-dns.yaml
+  - hashicorp.yaml
+  - intel.yaml
+  - longhorn.yaml
+  - node-feature-discovery.yaml
+  - traefik.yaml
+  - weave-gitops-charts.yaml
+  - external-secrets.yaml

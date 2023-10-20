@@ -1,0 +1,208 @@
+---
+clusterName: ${clusterName}
+talosVersion: v1.4.7
+kubernetesVersion: v1.27.4
+endpoint: https://${clusterEndpointIP}:6443
+allowSchedulingOnMasters: true
+cniConfig:
+  name: none
+
+additionalMachineCertSans:
+  - ${clusterEndpointIP}
+
+additionalApiServerCertSans:
+  - ${clusterEndpointIP}
+  - ${clusterName}.${clusterDomain}
+
+nodes:
+  - hostname: talos03.${clusterDomain}
+    ipAddress: 172.16.11.13
+    installDiskSelector:
+      busPath: /pci0000:00/0000:00:17.0/ata5/host4/target4:0:0/4:0:0:0/
+    controlPlane: true
+    disableSearchDomain: true
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/sata
+    nameservers:
+      - ${dnsIP}
+    networkInterfaces:
+      - interface: eth0
+        addresses:
+          - 172.16.11.13/24
+        mtu: 9000
+        routes:
+          - network: 0.0.0.0/0
+            gateway: ${defaultGW}
+        vip:
+          ip: ${clusterEndpointIP}
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/mnt/sata
+                type: bind
+                source: /var/mnt/sata
+                options:
+                  - rbind
+                  - rshared
+                  - rw
+  - hostname: talos02.${clusterDomain}
+    ipAddress: 172.16.11.12
+    installDiskSelector:
+      busPath: /pci0000:00/0000:00:1b.0/0000:01:00.0/nvme/nvme0/nvme0n1
+    controlPlane: true
+    disableSearchDomain: true
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/sata
+    nameservers:
+      - ${dnsIP}
+    networkInterfaces:
+      - interface: eth0
+        addresses:
+          - 172.16.11.12/24
+        mtu: 9000
+        routes:
+          - network: 0.0.0.0/0
+            gateway: ${defaultGW}
+        vip:
+          ip: ${clusterEndpointIP}
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/mnt/sata
+                type: bind
+                source: /var/mnt/sata
+                options:
+                  - rbind
+                  - rshared
+                  - rw
+  - hostname: talos01.${clusterDomain}
+    ipAddress: 172.16.11.11
+    installDiskSelector:
+      busPath: /pci0000:00/0000:00:1b.0/0000:01:00.0/nvme/nvme0/nvme0n1
+    controlPlane: true
+    disableSearchDomain: true
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/sata
+    nameservers:
+      - ${dnsIP}
+    networkInterfaces:
+      - interface: eth0
+        addresses:
+          - 172.16.11.11/24
+        mtu: 9000
+        routes:
+          - network: 0.0.0.0/0
+            gateway: ${defaultGW}
+        vip:
+          ip: ${clusterEndpointIP}
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/mnt/sata
+                type: bind
+                source: /var/mnt/sata
+                options:
+                  - rbind
+                  - rshared
+                  - rw
+controlPlane:
+  inlinePatch:
+    cluster:
+      allowSchedulingOnMasters: true
+      proxy:
+        disabled: true
+      etcd:
+        extraArgs:
+          listen-metrics-urls: http://0.0.0.0:2381
+        advertisedSubnets:
+          - 172.16.11.0/24
+      controllerManager:
+        extraArgs:
+          bind-address: 0.0.0.0
+      scheduler:
+        extraArgs:
+          bind-address: 0.0.0.0
+      apiServer:
+        admissionControl: null
+
+
+    machine:
+      sysctls:
+        fs.inotify.max_user_watches: 524288
+        fs.inotify.max_user_instances: 512
+        net.core.somaxconn: 32768
+        net.core.rmem_max: 536870912
+        net.core.wmem_max: 536870912
+        net.core.rmem_default: 262144
+        net.core.wmem_default: 262144
+        net.ipv4.tcp_rmem: 43690 87380 268435456
+        net.ipv4.tcp_wmem: 43690 87380 268435456
+        net.ipv4.tcp_mtu_probing: 1
+        net.ipv4.tcp_congestion_control: cubic
+        net.ipv4.udp_mem: 1529172 2038896 134217728
+        net.ipv4.udp_rmem_min: 4096
+        net.ipv4.udp_wmem_min: 409
+        net.ipv4.tcp_max_syn_backlog: 4096
+        net.ipv4.tcp_tw_reuse: 1
+        net.ipv4.tcp_syncookies: 1
+        net.ipv4.ip_forward: 1
+        net.ipv4.conf.all.forwarding: 1
+        net.ipv4.conf.all.rp_filter: 0
+        net.ipv4.conf.default.rp_filter: 0
+        net.ipv6.conf.all.forwarding: 1
+        net.bridge.bridge-nf-call-iptables: 1
+        net.bridge.bridge-nf-call-ip6tables: 1
+      network:
+        extraHostEntries:
+          - ip: ${clusterEndpointIP}
+            aliases:
+              - ${clusterName}.${domainName}
+          - ip: ${storageIP}
+            aliases:
+              - storage.${domainName}
+      time:
+        disabled: false
+        servers:
+          - time.${domainName}
+      install:
+        extensions:
+          - image: ghcr.io/siderolabs/i915-ucode:20230625
+          - image: ghcr.io/siderolabs/intel-ucode:20230613
+      kubelet:
+        extraArgs:
+          feature-gates: GracefulNodeShutdown=true
+          rotate-server-certificates: true
+        nodeIP:
+          validSubnets:
+            - 172.16.11.0/24
+      files:
+        - content: |
+            [plugins."io.containerd.grpc.v1.cri"]
+              enable_unprivileged_ports = true
+              enable_unprivileged_icmp = true
+          path: /etc/cri/conf.d/20-customization.part
+          op: create
