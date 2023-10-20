@@ -27,7 +27,7 @@ tasks:
       - kubectl apply --server-side --kustomize {{.ROOT_DIR}}/kubernetes/bootstrap/flux
       - sops --decrypt {{.ROOT_DIR}}/kubernetes/bootstrap/flux/age-key.sops.yaml | kubectl apply -f -
       - sops --decrypt {{.ROOT_DIR}}/kubernetes/bootstrap/flux/github-deploy-key.sops.yaml | kubectl apply -f -
-      - sops --decrypt {{.ROOT_DIR}}/kubernetes/flux/vars/cluster-secrets.sops.yaml | kubectl apply -f -
+#      - sops --decrypt {{.ROOT_DIR}}/kubernetes/flux/vars/cluster-secrets.sops.yaml | kubectl apply -f -
       - kubectl apply -f {{.ROOT_DIR}}/kubernetes/flux/vars/cluster-settings.yaml
 
   kickoff:
