@@ -24,16 +24,16 @@ tasks:
   install:
     desc: Install Flux into your cluster, run this again if it fails
     cmds:
-      - kubectl apply --server-side --kustomize {{.ROOT_DIR}}/kubernetes/bootstrap/flux
-      - sops --decrypt {{.ROOT_DIR}}/kubernetes/bootstrap/flux/age-key.sops.yaml | kubectl apply -f -
-      - sops --decrypt {{.ROOT_DIR}}/kubernetes/bootstrap/flux/github-deploy-key.sops.yaml | kubectl apply -f -
-#      - sops --decrypt {{.ROOT_DIR}}/kubernetes/flux/vars/cluster-secrets.sops.yaml | kubectl apply -f -
-      - kubectl apply -f {{.ROOT_DIR}}/kubernetes/flux/vars/cluster-settings.yaml
+      - kubectl apply --server-side --kustomize {{.CLUSTER_DIR}}/bootstrap/flux
+      - sops --decrypt {{.CLUSTER_DIR}}/bootstrap/flux/age-key.sops.yaml | kubectl apply -f -
+      - sops --decrypt {{.CLUSTER_DIR}}/bootstrap/flux/github-deploy-key.sops.yaml | kubectl apply -f -
+      - sops --decrypt {{.CLUSTER_DIR}}/flux/vars/cluster-secrets.sops.yaml | kubectl apply -f -
+      - kubectl apply -f {{.CLUSTER_DIR}}/flux/vars/cluster-settings.yaml
 
   kickoff:
     desc: Kicks off Flux applying the repository
     cmds:
-      - kubectl apply --server-side --kustomize {{.ROOT_DIR}}/kubernetes/flux/config
+      - kubectl apply --server-side --kustomize {{.CLUSTER_DIR}}/flux/config
 
   gr-sync:
     desc: Sync all Flux GitRepositories

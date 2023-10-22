@@ -1,9 +1,12 @@
 ---
 version: "3"
 vars:
-  CLUSTER_DIR: "{{.ROOT_DIR}}/kubernetes"
+  CLUSTER: cluster-0
+  CLUSTER_DIR: "{{.ROOT_DIR}}/kubernetes/{{.CLUSTER}}"
   CLUSTER_SECRETS_FILE: "{{.CLUSTER_DIR}}/flux/vars/cluster-secrets.sops.env"
   CLUSTER_SETTINGS_FILE: "{{.CLUSTER_DIR}}/flux/vars/cluster-settings.env"
+  TALOS_DIR: "{{.ROOT_DIR}}/infrastructure/talos/{{.CLUSTER}}"
+
 
 env:
   KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
@@ -16,6 +19,9 @@ includes:
   k8s:
     taskfile: .taskfiles/k8s
     dir: .taskfiles/k8s
+  talos:
+    taskfile: .taskfiles/talos
+    dir: .taskfiles/talos
   # externalsecrets:
   #   taskfile: .taskfiles/externalsecrets
   #   dir: .taskfiles/externalsecrets
@@ -31,3 +37,4 @@ tasks:
     silent: true
     cmds:
       - task -l
+      - echo "{{.CLUSTER}}"
