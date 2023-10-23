@@ -3,6 +3,6 @@
 # kind: Kustomization
 # resources:
 #   # Pre Flux-Kustomizations
-#   - ./security
+  - ./security
 #   # Flux-Kustomizations
-#   # - ./external-secrets/ks.yaml # Commented for testing
+  # - ./external-secrets/ks.yaml # Commented for testing
