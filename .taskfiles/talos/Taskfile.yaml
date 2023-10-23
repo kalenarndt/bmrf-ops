@@ -23,4 +23,3 @@ tasks:
     desc: Boostraps a controlplane node in the cluster
     cmds:
       - sops --decrypt {{.TALOS_DIR}}/talosconfig.sops.yaml | talosctl bootstrap --nodes 172.16.11.11 -f -
-
