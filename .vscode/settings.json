@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "*.json5": "jsonc",
+        "**/ansible/**/*.yaml": "ansible",
+        "**/ansible/**/*.sops.yaml": "yaml",
+        "**/ansible/**/inventory/**/*.yaml": "yaml",
+        "**/terraform/**/*.tf": "terraform",
+        "**/kubernetes/**/*.sops.toml": "plaintext"
+    },
+    "prettier.configPath": ".ci/prettier/.prettierrc.yaml",
+    "prettier.ignorePath": ".ci/prettier/.prettierignore",
+    "yaml.schemaStore.enable": true,
+    "yaml.schemas": {
+      "ansible": ["infrastructure/ansible/*.yml", "infrastructure/ansible/*.yaml"],
+      "kubernetes": ["kubernetes/*.yml", "kubernetes/*.yaml"]
+    },
+    "ansible.python.interpreterPath": ".direnv/python-3.11.2/bin/python",
+  }

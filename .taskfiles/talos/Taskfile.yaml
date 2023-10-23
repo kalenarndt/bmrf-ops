@@ -1,0 +1,26 @@
+---
+version: "3"
+
+tasks:
+
+  generate:
+    desc: Generates the Talos cluster configuration from Talhelper
+    cmds:
+      - talhelper genconfig --env-file {{.TALOS_DIR}}/talenv.sops.yaml --secret-file {{.TALOS_DIR}}/talsecret.sops.yaml --config-file {{.TALOS_DIR}}/talconfig
+    preconditions:
+      - test -f {{.TALOS_DIR}}/talenv.sops.yaml
+      - test -f {{.TALOS_DIR}}/talsecret.sops.yaml
+      - test -f {{.TALOS_DIR}}/talconfig.yaml
+
+  apply:
+    desc: Applies the generated configurations from Talhelper
+    cmds:
+      - talosctl apply-config -n 172.16.11.11 -f {{.TALOS_DIR}}/clusterconfig/cluster-0-talos01.bmrf.io.yaml
+      - talosctl apply-config -n 172.16.11.12 -f {{.TALOS_DIR}}/clusterconfig/cluster-0-talos02.bmrf.io.yaml
+      - talosctl apply-config -n 172.16.11.12 -f {{.TALOS_DIR}}/clusterconfig/cluster-0-talos03.bmrf.io.yaml
+
+  bootstrap:
+    desc: Boostraps a controlplane node in the cluster
+    cmds:
+      - sops --decrypt {{.TALOS_DIR}}/talosconfig.sops.yaml | talosctl bootstrap --nodes 172.16.11.11 -f -
+
