@@ -6,21 +6,57 @@ tasks:
   generate:
     desc: Generates the Talos cluster configuration from Talhelper
     cmds:
-      - talhelper genconfig --env-file {{.TALOS_DIR}}/talenv.sops.yaml --secret-file {{.TALOS_DIR}}/talsecret.sops.yaml --config-file {{.TALOS_DIR}}/talconfig
+      - talhelper genconfig --env-file {{.TALOS_DIR}}/talenv.sops.yaml --secret-file {{.TALOS_DIR}}/talsecret.sops.yaml --config-file {{.TALOS_DIR}}/talconfig.yaml --out-dir {{.TALOS_DIR}}/clusterconfig --no-gitignore
     preconditions:
       - test -f {{.TALOS_DIR}}/talenv.sops.yaml
       - test -f {{.TALOS_DIR}}/talsecret.sops.yaml
       - test -f {{.TALOS_DIR}}/talconfig.yaml
 
   apply:
-    desc: Applies the generated configurations from Talhelper
+    desc: Applies a single generated configuration from Talhelper to a node
+    interactive: true
+    vars:
+      NODE: "{{.NODE | default nil}}"
     cmds:
-      - talosctl apply-config -n 172.16.11.11 -f {{.TALOS_DIR}}/clusterconfig/cluster-0-talos01.bmrf.io.yaml
-      - talosctl apply-config -n 172.16.11.12 -f {{.TALOS_DIR}}/clusterconfig/cluster-0-talos02.bmrf.io.yaml
-      - talosctl apply-config -n 172.16.11.12 -f {{.TALOS_DIR}}/clusterconfig/cluster-0-talos03.bmrf.io.yaml
+      - talosctl apply-config -n {{.NODE}} -f {{.TALOS_DIR}}/clusterconfig/{{.CLUSTER}}-{{.NODE}}.yaml
+    preconditions:
+      - talosctl -n {{.NODE}} get mc
+
+  bulk-apply:
+    desc: Applies the generated configurations from Talhelper
+    interactive: true
+    vars:
+      NODE: "{{.NODE | default nil}}"
+    cmds:
+      - for: {var: NODE}
+        cmd: talosctl apply-config -n {{.ITEM}} -f {{.TALOS_DIR}}/clusterconfig/{{.CLUSTER}}-{{.ITEM}}.yaml
+
 
   bootstrap:
     desc: Boostraps a controlplane node in the cluster
     cmds:
       - sops --decrypt {{.TALOS_DIR}}/talosconfig.sops.yaml | talosctl bootstrap --nodes 172.16.11.11 -f -
 
+  upgrade-talos:
+    desc: Upgrade talos on a node
+    interactive: true
+    dir: ./talos
+    vars:
+      node: "{{.node | default nil}}"
+      image: "{{.image | default nil}}"
+    cmds:
+      - talosctl -n {{.node}} upgrade --image {{.image}} --preserve=true
+    preconditions:
+      - talosctl -n {{.node}} get mc
+
+  upgrade-k8s:
+    desc: Upgrade k8s on a node
+    interactive: true
+    dir: ./talos
+    vars:
+      node: "{{.node | default nil}}"
+      to: "{{.to | default nil}}"
+    cmds:
+      - talosctl -n {{.node}} upgrade-k8s --to {{.to}}
+    preconditions:
+      - talosctl -n {{.node}} get mc
