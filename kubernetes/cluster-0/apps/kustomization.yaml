@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   # Pre Flux-Kustomizations
   - ./security
-
+  - ./cert-manager
