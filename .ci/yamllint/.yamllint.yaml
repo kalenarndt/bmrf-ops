@@ -5,6 +5,7 @@ ignore: |
   .private/
   .vscode/
   *.sops.*
+  kustomizeconfig.yaml
   ansible/roles/xanmanning.k3s/
 
 extends: default
