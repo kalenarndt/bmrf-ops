@@ -11,6 +11,6 @@ resources:
   - intel.yaml
   - longhorn.yaml
   - node-feature-discovery.yaml
-  - traefik.yaml
   - weave-gitops-charts.yaml
   - external-secrets.yaml
+  - jetstack.yaml
