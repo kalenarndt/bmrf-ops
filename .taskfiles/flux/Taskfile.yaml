@@ -8,6 +8,11 @@ tasks:
     cmds:
       - flux check --pre
 
+  reconcile:
+    desc: Force update Flux to pull in changes from your Git repository
+    cmds:
+      - flux reconcile source git bmrf-ops {{.CLI_ARGS | default "-n flux-sytem"}}
+
   apply:
     desc: Apply a resource path that contains Flux substitution variables
     dotenv: ['{{.CLUSTER_SETTINGS_FILE}}']
