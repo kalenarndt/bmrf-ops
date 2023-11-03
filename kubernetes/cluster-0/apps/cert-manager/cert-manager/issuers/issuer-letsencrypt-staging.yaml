@@ -6,16 +6,16 @@ metadata:
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: "${SECRET_DOMAIN_EMAIL}"
+    email: "postmaster@bmrf.io"
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
       - dns01:
           cloudflare:
-            email: "${SECRET_DOMAIN_EMAIL}"
+            email: "postmaster@bmrf.io"
             apiTokenSecretRef:
               name: cloudflare-api-token
               key: api-token
         selector:
           dnsZones:
-            - "${SECRET_DOMAIN}"
+            - "bmrf.io"
