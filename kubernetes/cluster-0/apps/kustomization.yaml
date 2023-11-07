@@ -5,4 +5,4 @@ resources:
   # Pre Flux-Kustomizations
   - ./security
   - ./cert-manager
-  - ./security
+  - ./system
