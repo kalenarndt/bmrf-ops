@@ -4,4 +4,4 @@ kind: Kustomization
 namespace: network
 resources:
   - ./certificate.yaml
-  - ./dashboard/
+  - ./dashboard
