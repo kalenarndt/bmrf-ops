@@ -4,3 +4,9 @@ kind: Kustomization
 namespace: system
 resources:
   - ./helmrelease.yaml
+configMapGenerator:
+  - name: reloader-values
+    files:
+      - values.yaml=values.yaml
+configurations:
+  - kustomizeconfig.yaml
