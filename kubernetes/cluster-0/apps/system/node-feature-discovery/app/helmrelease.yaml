@@ -16,23 +16,18 @@ spec:
         name: kubernetes-sigs-nfd
         namespace: flux-system
       interval: 30m
+  maxHistory: 2
   install:
+    remediation:
+      retries: 5
     crds: CreateReplace
   upgrade:
+    remediation:
+      retries: 5
     crds: CreateReplace
-  values:
-    master:
-      resources:
-        requests:
-          cpu: 21m
-          memory: 51Mi
-        limits:
-          memory: 51Mi
-
-    worker:
-      resources:
-        requests:
-          cpu: 5m
-          memory: 48Mi
-        limits:
-          memory: 48Mi
+    cleanupOnFail: true
+  uninstall:
+    keepHistory: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: node-feature-discovery-values

@@ -16,4 +16,16 @@ spec:
         name: stakater
         namespace: flux-system
       interval: 30m
-  values:
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+    cleanupOnFail: true
+  uninstall:
+    keepHistory: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: reloader-values
