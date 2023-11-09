@@ -1,9 +1,9 @@
 ---
 fullnameOverride: reloader
 reloader:
-  reloadStrategy: annotations
   podMonitor:
     enabled: true
+  reloadStrategy: annotations
   deployment:
     resources:
       requests:
@@ -11,3 +11,4 @@ reloader:
         memory: 144Mi
       limits:
         memory: 256Mi
+    memory: 256Mi
