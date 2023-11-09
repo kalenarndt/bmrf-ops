@@ -17,3 +17,4 @@ resources:
   - skakater.yaml
   - kubernetes-sigs-nfd.yaml
   - ingress-nginx.yaml
+  - kubernetes-sigs-metrics-server.yaml
