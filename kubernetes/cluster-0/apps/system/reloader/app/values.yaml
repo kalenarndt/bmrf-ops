@@ -1,6 +1,9 @@
 ---
+fullnameOverride: reloader
 reloader:
   reloadStrategy: annotations
+  podMonitor:
+    enabled: true
   deployment:
     resources:
       requests:
