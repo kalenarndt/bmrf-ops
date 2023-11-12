@@ -6,15 +6,18 @@ resources:
   - bjw-s.yaml
   - cloudnative-pg.yaml
   - descheduler.yaml
-  - external-dns.yaml
   - hashicorp.yaml
   - intel.yaml
   - longhorn.yaml
   - node-feature-discovery.yaml
-  - weave-gitops-charts.yaml
+  - weave-gitops.yaml
   - external-secrets.yaml
   - jetstack.yaml
   - skakater.yaml
   - kubernetes-sigs-nfd.yaml
   - ingress-nginx.yaml
   - kubernetes-sigs-metrics-server.yaml
+  - kubernetes-sigs-external-dns.yaml
+  - kubernetes-sigs-descheduler.yaml
+  - rook-ceph.yaml
+
