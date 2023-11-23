@@ -11,7 +11,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: bmrf-ops
   wait: true
   dependsOn:
     - name: cluster-apps-csi-addons-controller-manager
@@ -28,24 +28,24 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: bmrf-ops
   wait: true
   dependsOn:
     - name: cluster-apps-rook-ceph
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: cluster-apps-rook-ceph-addons
-  namespace: flux-system
-spec:
-  interval: 10m
-  path: "./kubernetes/cluster-0/apps/rook-ceph/rook-ceph/add-ons"
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: home-ops-kubernetes
-  wait: false
-  dependsOn:
-    - name: cluster-apps-rook-ceph-cluster
+# ---
+# # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: cluster-apps-rook-ceph-addons
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   path: "./kubernetes/cluster-0/apps/rook-ceph/rook-ceph/add-ons"
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: bmrf-ops
+#   wait: false
+#   dependsOn:
+#     - name: cluster-apps-rook-ceph-cluster
