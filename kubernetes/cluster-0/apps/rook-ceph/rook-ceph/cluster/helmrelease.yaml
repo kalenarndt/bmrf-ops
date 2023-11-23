@@ -89,15 +89,15 @@ spec:
         config:
           osdsPerDevice: "1"
         nodes:
-          - name: "delta"
+          - name: "talos01"
             devices:
-              - name: "/dev/disk/by-id/nvme-Samsung_SSD_980_1TB_S649NX0RB57009Y"
-          - name: "enigma"
+              - name: "/dev/sda"
+          - name: "talos02"
             devices:
-              - name: "/dev/disk/by-id/nvme-Samsung_SSD_980_1TB_S649NX0RB57050E"
-          - name: "felix"
+              - name: "/dev/sda"
+          - name: "talos03"
             devices:
-              - name: "/dev/disk/by-id/nvme-CT1000P1SSD8_202228759489"
+              - name: "/dev/sda"
 
     ingress:
       ingressClassName: "internal-nginx"
@@ -105,7 +105,7 @@ spec:
         annotations:
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         host:
-          name: &host rook-cluster-0.bjw-s.dev
+          name: &host rook-cluster-0.bmrf.io
           path: "/"
         tls:
           - hosts:
