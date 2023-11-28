@@ -1,5 +1,5 @@
 ---
 metrics:
   enabled: true
-serviceMonitor:
-  enabled: true
+# serviceMonitor:
+#   enabled: true #TODO: Add prometheus and then change the service monitor to true
