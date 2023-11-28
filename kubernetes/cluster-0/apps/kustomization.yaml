@@ -10,3 +10,4 @@ resources:
   - ./network
   - ./kube-system
   - ./csi-addons-system
+  - ./rook-ceph
