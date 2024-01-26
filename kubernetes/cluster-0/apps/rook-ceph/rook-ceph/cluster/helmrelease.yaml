@@ -91,13 +91,13 @@ spec:
         nodes:
           - name: "talos01"
             devices:
-              - name: "/dev/sda"
+              - name: "/dev/sda1"
           - name: "talos02"
             devices:
-              - name: "/dev/sda"
+              - name: "/dev/sda1"
           - name: "talos03"
             devices:
-              - name: "/dev/sda"
+              - name: "/dev/sda1"
 
     ingress:
       ingressClassName: "internal-nginx"
