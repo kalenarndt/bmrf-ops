@@ -80,7 +80,7 @@ spec:
         disable: false
 
       dashboard:
-        enabled: true
+        enabled: false
         urlPrefix: /
 
       storage:
