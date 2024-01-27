@@ -1,18 +1,23 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
 clusterName: ${clusterName}
-talosVersion: v1.4.7
-kubernetesVersion: v1.27.4
 endpoint: https://${clusterEndpointIP}:6443
+
+# renovate: depName=ghcr.io/siderolabs/installer datasource=docker extractVersion=^(?<version>.*)$
+talosVersion: v1.6.2
+# renovate: depName=kubernetes/kubernetes datasource=github-releases extractVersion=^v(?<version>.*)$
+kubernetesVersion: v1.29.1
+
 allowSchedulingOnMasters: true
 cniConfig:
   name: none
 
-additionalMachineCertSans:
-  - ${clusterEndpointIP}
-
-additionalApiServerCertSans:
+additionalApiServerCertSans: &san
   - ${clusterEndpointIP}
   - ${clusterName}.${clusterDomain}
+  - "127.0.0.1" #KubePrism https://www.talos.dev/v1.6/kubernetes-guides/configuration/kubeprism/
+additionalMachineCertSans: *san
+
 
 nodes:
   - hostname: talos03.${clusterDomain}
@@ -20,16 +25,15 @@ nodes:
     installDiskSelector:
       busPath: /pci0000:00/0000:00:17.0/ata5/host4/target4:0:0/4:0:0:0/
     controlPlane: true
-    disableSearchDomain: true
     kernelModules:
       - name: br_netfilter
         parameters:
           - nf_conntrack_max=131072
-    machineDisks:
-      - device: /dev/sda
-        partitions:
-          - mountpoint: /var/mnt/sata
-    nameservers:
+    # machineDisks:
+    #   - device: /dev/sda
+    #     partitions:
+    #       - mountpoint: /var/mnt/sata
+    nameservers: &dns
       - ${dnsIP}
     networkInterfaces:
       - interface: eth0
@@ -41,18 +45,18 @@ nodes:
             gateway: ${defaultGW}
         vip:
           ip: ${clusterEndpointIP}
-    patches:
-      - |-
-        machine:
-          kubelet:
-            extraMounts:
-              - destination: /var/mnt/sata
-                type: bind
-                source: /var/mnt/sata
-                options:
-                  - rbind
-                  - rshared
-                  - rw
+    # patches:
+    #   - |-
+    #     machine:
+    #       kubelet:
+    #         extraMounts:
+    #           - destination: /var/mnt/sata
+    #             type: bind
+    #             source: /var/mnt/sata
+    #             options:
+    #               - rbind
+    #               - rshared
+    #               - rw
   - hostname: talos02.${clusterDomain}
     ipAddress: 172.16.11.12
     installDiskSelector:
@@ -63,12 +67,11 @@ nodes:
       - name: br_netfilter
         parameters:
           - nf_conntrack_max=131072
-    machineDisks:
-      - device: /dev/sda
-        partitions:
-          - mountpoint: /var/mnt/sata
-    nameservers:
-      - ${dnsIP}
+    # machineDisks:
+    #   - device: /dev/sda
+    #     partitions:
+    #       - mountpoint: /var/mnt/sata
+    nameservers: *dns
     networkInterfaces:
       - interface: eth0
         addresses:
@@ -79,34 +82,32 @@ nodes:
             gateway: ${defaultGW}
         vip:
           ip: ${clusterEndpointIP}
-    patches:
-      - |-
-        machine:
-          kubelet:
-            extraMounts:
-              - destination: /var/mnt/sata
-                type: bind
-                source: /var/mnt/sata
-                options:
-                  - rbind
-                  - rshared
-                  - rw
+    # patches:
+    #   - |-
+    #     machine:
+    #       kubelet:
+    #         extraMounts:
+    #           - destination: /var/mnt/sata
+    #             type: bind
+    #             source: /var/mnt/sata
+    #             options:
+    #               - rbind
+    #               - rshared
+    #               - rw
   - hostname: talos01.${clusterDomain}
     ipAddress: 172.16.11.11
     installDiskSelector:
       busPath: /pci0000:00/0000:00:1b.0/0000:01:00.0/nvme/nvme0/nvme0n1
     controlPlane: true
-    disableSearchDomain: true
     kernelModules:
       - name: br_netfilter
         parameters:
           - nf_conntrack_max=131072
-    machineDisks:
-      - device: /dev/sda
-        partitions:
-          - mountpoint: /var/mnt/sata
-    nameservers:
-      - ${dnsIP}
+    # machineDisks:
+    #   - device: /dev/sda
+    #     partitions:
+    #       - mountpoint: /var/mnt/sata
+    nameservers: *dns
     networkInterfaces:
       - interface: eth0
         addresses:
@@ -117,29 +118,28 @@ nodes:
             gateway: ${defaultGW}
         vip:
           ip: ${clusterEndpointIP}
-    patches:
-      - |-
-        machine:
-          kubelet:
-            extraMounts:
-              - destination: /var/mnt/sata
-                type: bind
-                source: /var/mnt/sata
-                options:
-                  - rbind
-                  - rshared
-                  - rw
+    # patches:
+    #   - |-
+    #     machine:
+    #       kubelet:
+    #         extraMounts:
+    #           - destination: /var/mnt/sata
+    #             type: bind
+    #             source: /var/mnt/sata
+    #             options:
+    #               - rbind
+    #               - rshared
+    #               - rw
 controlPlane:
-  inlinePatch:
+  schematic:
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/intel-ucode
+          - siderolabs/i915-ucode
+          - siderolabs/thunderbolt
+
     cluster:
-      allowSchedulingOnMasters: true
-      proxy:
-        disabled: true
-      etcd:
-        extraArgs:
-          listen-metrics-urls: http://0.0.0.0:2381
-        advertisedSubnets:
-          - 172.16.11.0/24
       controllerManager:
         extraArgs:
           bind-address: 0.0.0.0
@@ -149,6 +149,102 @@ controlPlane:
       apiServer:
         admissionControl: null
 
+  patches:
+    # Cluster configuration
+    - |-
+      cluster:
+        allowSchedulingOnMasters: true
+        proxy:
+          disabled: true
+
+    # ETCD configuration
+    - |-
+      cluster:
+        etcd:
+          advertisedSubnets:
+            - 172.16.11.0/24
+        extraArgs:
+          listen-metrics-urls: http://0.0.0.0:2381
+
+    # Disable default API server admission plugins.
+    - |-
+      - op: remove
+        path: /cluster/apiServer/admissionControl
+
+    # Force nameserver
+    - |-
+      machine:
+        network:
+          nameservers:
+            - *dns
+
+    # Configure NTP
+    - |-
+      machine:
+        time:
+          disabled: false
+          servers:
+            - 172.16.0.4
+
+    # Disable search domain everywhere
+    - |-
+      machine:
+        network:
+          disableSearchDomain: true
+
+    # Configure cluster loopback
+    - |-
+      machine:
+        network:
+          extraHostEntries:
+            - ip: ${clusterEndpointIP}
+              aliases:
+                - ${clusterName}.${clusterDomain}
+            - ip: ${storageIP}
+              aliases:
+                - storage.${clusterDomain}
+
+    # Enable KubePrism
+    - |-
+      machine:
+        features:
+          kubePrism:
+            enabled: true
+            port: 7445
+
+    # Kubelet configuration
+    - |-
+      machine:
+        kubelet:
+          extraArgs:
+            feature-gates: GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
+            rotate-server-certificates: "true"
+          nodeIP:
+            validSubnets:
+            - 172.16.11.0/24
+
+    # Configure containerd
+    - |-
+      machine:
+        files:
+          - op: create
+            path: /etc/cri/conf.d/20-customization.part
+            content: |
+              [plugins]
+                [plugins."io.containerd.grpc.v1.cri"]
+                  enable_unprivileged_ports = true
+                  enable_unprivileged_icmp = true
+
+    # Enable K8s Talos API Access
+    - |-
+      machine:
+        features:
+          kubernetesTalosAPIAccess:
+            enabled: true
+            allowedRoles:
+              - os:admin
+            allowedKubernetesNamespaces:
+              - system-controllers
 
     machine:
       sysctls:
@@ -176,33 +272,3 @@ controlPlane:
         net.ipv6.conf.all.forwarding: 1
         net.bridge.bridge-nf-call-iptables: 1
         net.bridge.bridge-nf-call-ip6tables: 1
-      network:
-        extraHostEntries:
-          - ip: ${clusterEndpointIP}
-            aliases:
-              - ${clusterName}.${domainName}
-          - ip: ${storageIP}
-            aliases:
-              - storage.${domainName}
-      time:
-        disabled: false
-        servers:
-          - time.${domainName}
-      install:
-        extensions:
-          - image: ghcr.io/siderolabs/i915-ucode:20230625
-          - image: ghcr.io/siderolabs/intel-ucode:20230613
-      kubelet:
-        extraArgs:
-          feature-gates: GracefulNodeShutdown=true
-          rotate-server-certificates: true
-        nodeIP:
-          validSubnets:
-            - 172.16.11.0/24
-      files:
-        - content: |
-            [plugins."io.containerd.grpc.v1.cri"]
-              enable_unprivileged_ports = true
-              enable_unprivileged_icmp = true
-          path: /etc/cri/conf.d/20-customization.part
-          op: create
