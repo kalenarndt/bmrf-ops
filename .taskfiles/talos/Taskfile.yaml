@@ -19,8 +19,8 @@ tasks:
       NODE: "{{.NODE | default nil}}"
     cmds:
       - talosctl apply-config -n {{.NODE}} -f {{.TALOS_DIR}}/clusterconfig/talos-{{.NODE}}.yaml
-    preconditions:
-      - talosctl -n {{.NODE}} get mc
+    # preconditions:
+    #   - talosctl -n {{.NODE}} get mc
 
   bulk-apply:
     desc: Applies the generated configurations from Talhelper
@@ -34,8 +34,11 @@ tasks:
 
   bootstrap:
     desc: Boostraps a controlplane node in the cluster
+    interactive: true
+    vars:
+      NODE: "{{.NODE | default nil}}"
     cmds:
-      - sops --decrypt {{.TALOS_DIR}}/talosconfig.sops.yaml | talosctl bootstrap --nodes 172.16.11.11 -f -
+      - sops --decrypt {{.TALOS_DIR}}/talosconfig.sops.yaml | talosctl bootstrap --nodes {{.NODE}} --talosconfig -
 
   upgrade-talos:
     desc: Upgrade talos on a node
