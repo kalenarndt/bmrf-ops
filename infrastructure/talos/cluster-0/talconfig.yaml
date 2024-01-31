@@ -106,7 +106,8 @@ nodes:
     #     partitions:
     #       - mountpoint: /var/mnt/sata
     networkInterfaces:
-      - interface: eth0
+      - deviceSelector:
+          driver: e1000e
         mtu: ${mtu}
         addresses:
           - 172.16.11.11/24
