@@ -6,6 +6,8 @@ vars:
   CLUSTER_SECRETS_FILE: "{{.CLUSTER_DIR}}/flux/vars/cluster-secrets.sops.env"
   CLUSTER_SETTINGS_FILE: "{{.CLUSTER_DIR}}/flux/vars/cluster-settings.env"
   TALOS_DIR: "{{.ROOT_DIR}}/infrastructure/talos/{{.CLUSTER}}"
+  TALOS_INTEGRATIONS_DIR: "{{.TALOS_DIR}}/"
+  KUBERNETES_APP_DIR: "{{.ROOT_DIR}}/kubernetes/{{.CLUSTER}}/apps"
 
 
 env:

@@ -12,7 +12,24 @@ tasks:
       - test -f {{.TALOS_DIR}}/talsecret.sops.yaml
       - test -f {{.TALOS_DIR}}/talconfig.yaml
 
-  apply:
+  reset:
+    desc: Resets a talos node
+    interactive: true
+    vars:
+      NODE: "{{.NODE | default nil}}"
+    cmds:
+      - talosctl reset -n {{.NODE}} --reboot
+
+  force-reset:
+    desc: Force resets a talos node
+    interactive: true
+    vars:
+      NODE: "{{.NODE | default nil}}"
+    cmds:
+      - talosctl reset -n {{.NODE}} --graceful=false --reboot
+
+
+  apply-init:
     desc: Applies a single generated configuration from Talhelper to a node
     interactive: true
     vars:
@@ -29,7 +46,7 @@ tasks:
       NODE: "{{.NODE | default nil}}"
     cmds:
       - for: {var: NODE}
-        cmd: talosctl apply-config -n {{.ITEM}} -f {{.TALOS_DIR}}/clusterconfig/{{.CLUSTER}}-{{.ITEM}}.yaml
+        cmd: talosctl apply-config -n {{.ITEM}} -f {{.TALOS_DIR}}/clusterconfig/talos-{{.ITEM}}.yaml --insecure
 
 
   bootstrap:
@@ -39,6 +56,28 @@ tasks:
       NODE: "{{.NODE | default nil}}"
     cmds:
       - sops --decrypt {{.TALOS_DIR}}/talosconfig.sops.yaml | talosctl bootstrap --nodes {{.NODE}} --talosconfig -
+
+  deploy-integrations:
+    desc: Deploys initial Cilium and kubelet-csr-approver charts
+    cmds:
+      - rm -rf {{.TALOS_DIR}}/integrations/cni/charts
+      - envsubst < {{.KUBERNETES_APP_DIR}}/kube-system/cilium/app/values.yaml > {{.TALOS_DIR}}/integrations/cni/values.yaml
+      - kustomize build --enable-helm {{.TALOS_DIR}}/integrations/cni | kubectl apply -f -
+      - rm {{.TALOS_DIR}}/integrations/cni/values.yaml
+      - rm -rf {{.TALOS_DIR}}/integrations/cni/charts
+
+  deploy-kubelet-csr:
+    desc: Deploys initial Cilium and kubelet-csr-approver charts
+    cmds:
+      - rm -rf {{.TALOS_DIR}}/integrations/kubelet-csr-approver/charts
+#      - envsubst < {{.KUBERNETES_APP_DIR}}/system-controllers/kubelet-csr-approver/app/values.yaml > {{.TALOS_DIR}}/integrations/kubelet-csr-approver/values.yaml
+      - |
+        if ! kubectl get ns system-controllers >/dev/null 2>&1; then
+          kubectl create ns system-controllers
+        fi
+      - kustomize build --enable-helm {{.TALOS_DIR}}/integrations/kubelet-csr-approver | kubectl apply -f -
+      - rm {{.TALOS_DIR}}/integrations/kubelet-csr-approver/values.yaml
+      - rm -rf {{.TALOS_DIR}}/integrations/kubelet-csr-approver/charts
 
   upgrade-talos:
     desc: Upgrade talos on a node
