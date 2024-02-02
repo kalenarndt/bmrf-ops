@@ -18,45 +18,75 @@ tasks:
     silent: true
     cmds:
      - kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
+  patch-crds:
+    desc: Patch Ceph CRDs for
+    cmds:
+    - |
+      for CRD in $(kubectl get crd -n rook-ceph | awk '/ceph.rook.io/ {print $1}'); do
+        kubectl get -n rook-ceph "$CRD" -o name | \
+        xargs -I {} kubectl patch -n rook-ceph {} --type merge -p '{"metadata":{"finalizers": []}}'
+      done
 
-  wipe-talos03:
-    desc: Trigger a wipe of Rook-Ceph data on node "talos01"
+  wipe-all:
+    desc: Trigger a wipe of Rook-Ceph data on all nodes
+    cmds:
+      - task: wipe-talos03
+      - task: wipe-talos02
+      - task: wipe-talos01
+
+
+  wipe-node:
+    desc: Trigger a wipe of Rook-Ceph data on node
     cmds:
       - task: wipe-disk
         vars:
           node: "{{.node}}"
-          ceph_disk: "/dev/disk/by-id/ata-INTEL_SSDSC2BX016T4R_BTHC626600GC1P6PGN"
+          ceph_disk: "{{.ceph_disk}}"
+      - task: wipe-data
+        vars:
+          node: "{{.node}}"
+    vars:
+      node: '{{ or .node (fail "`node` is required") }}'
+      ceph_disk: '{{ or .ceph_disk (fail "`ceph_disk` is required") }}'
+
+  wipe-talos03:
+    desc: Trigger a wipe of Rook-Ceph data on node "talos03"
+    cmds:
+      - task: wipe-disk
+        vars:
+          node: "{{.node}}"
+          ceph_disk: "/dev/sda"
       - task: wipe-data
         vars:
           node: "{{.node}}"
     vars:
       node: talos03
 
-  wipe-node-enigma:
-    desc: Trigger a wipe of Rook-Ceph data on node "enigma"
+  wipe-talos02:
+    desc: Trigger a wipe of Rook-Ceph data on node "talos02"
     cmds:
       - task: wipe-disk
         vars:
           node: "{{.node}}"
-          ceph_disk: "/dev/disk/by-id/nvme-Samsung_SSD_980_1TB_S649NX0RB57050E"
+          ceph_disk: "/dev/sda"
       - task: wipe-data
         vars:
           node: "{{.node}}"
     vars:
-      node: enigma
+      node: talos02
 
-  wipe-node-felix:
-    desc: Trigger a wipe of Rook-Ceph data on node "felix"
+  wipe-talos01:
+    desc: Trigger a wipe of Rook-Ceph data on node "talos01"
     cmds:
       - task: wipe-disk
         vars:
           node: "{{.node}}"
-          ceph_disk: "/dev/disk/by-id/nvme-CT1000P1SSD8_202228759489"
+          ceph_disk: "/dev/sda"
       - task: wipe-data
         vars:
           node: "{{.node}}"
     vars:
-      node: felix
+      node: talos01
 
   wipe-disk:
     desc: Wipe all remnants of rook-ceph from a given disk (ex. task rook:wipe-disk node=delta ceph_disk="/dev/nvme0n1")
@@ -64,10 +94,9 @@ tasks:
     internal: true
     cmds:
       - envsubst < <(cat {{.wipeRookDiskJobTemplate}}) | kubectl --context {{.cluster}} apply -f -
-      - bash {{.waitForJobScript}} {{.wipeCephDiskJobName}} default {{.cluster}}
-      - kubectl --context {{.cluster}} -n default wait job/{{.wipeCephDiskJobName}} --for condition=complete --timeout=1m
-      - kubectl --context {{.cluster}} -n default logs job/{{.wipeCephDiskJobName}} --container list
-      - kubectl --context {{.cluster}} -n default delete job {{.wipeCephDiskJobName}}
+      - bash {{.waitForJobScript}} {{.jobName}} default {{.cluster}}
+      - kubectl --context {{.cluster}} -n default wait job/{{.jobName}} --for condition=complete --timeout=3m
+      - kubectl --context {{.cluster}} -n default delete job {{.jobName}}
     vars:
       cluster: '{{ or .cluster (fail "`cluster` is required") }}'
       node: '{{ or .node (fail "`node` is required") }}'
@@ -82,13 +111,12 @@ tasks:
   wipe-data:
     desc: Wipe all remnants of rook-ceph from a given disk (ex. task rook:wipe-data node=delta)
     silent: true
-    internal: true
+    internal: false
     cmds:
       - envsubst < <(cat {{.wipeRookDataJobTemplate}}) | kubectl --context {{.cluster}} apply -f -
-      - bash {{.waitForJobScript}} {{.wipeRookDataJobName}} default {{.cluster}}
-      - kubectl --context {{.cluster}} -n default wait job/{{.wipeRookDataJobName}} --for condition=complete --timeout=1m
-      - kubectl --context {{.cluster}} -n default logs job/{{.wipeRookDataJobName}} --container list
-      - kubectl --context {{.cluster}} -n default delete job {{.wipeRookDataJobName}}
+      - bash {{.waitForJobScript}} {{.jobName}} default {{.cluster}}
+      - kubectl --context {{.cluster}} -n default wait job/{{.jobName}} --for condition=complete --timeout=3m
+      - kubectl --context {{.cluster}} -n default delete job {{.jobName}}
     vars:
       cluster: '{{ or .cluster (fail "`cluster` is required") }}'
       node: '{{ or .node (fail "`node` is required") }}'
