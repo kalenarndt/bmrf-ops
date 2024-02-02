@@ -13,18 +13,24 @@ vars:
   ts: '{{now | date "150405"}}'
 
 tasks:
-  wipe-node-delta:
-    desc: Trigger a wipe of Rook-Ceph data on node "delta"
+  password:
+    desc: Gets the password for the rook dashboard
+    silent: true
+    cmds:
+     - kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
+
+  wipe-talos03:
+    desc: Trigger a wipe of Rook-Ceph data on node "talos01"
     cmds:
       - task: wipe-disk
         vars:
           node: "{{.node}}"
-          ceph_disk: "/dev/disk/by-id/nvme-Samsung_SSD_980_1TB_S649NX0RB57009Y"
+          ceph_disk: "/dev/disk/by-id/ata-INTEL_SSDSC2BX016T4R_BTHC626600GC1P6PGN"
       - task: wipe-data
         vars:
           node: "{{.node}}"
     vars:
-      node: delta
+      node: talos03
 
   wipe-node-enigma:
     desc: Trigger a wipe of Rook-Ceph data on node "enigma"
