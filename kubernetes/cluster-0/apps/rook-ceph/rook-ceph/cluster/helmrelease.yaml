@@ -95,9 +95,9 @@ spec:
           - name: "talos02"
             devices:
               - name: "sda"
-          - name: "talos03"
-            devices:
-              - name: "sda"
+          # - name: "talos03"
+          #   devices:
+          #     - name: "sda"
 
     ingress:
       ingressClassName: "internal-nginx"
