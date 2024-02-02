@@ -29,7 +29,7 @@ tasks:
       - talosctl reset -n {{.NODE}} --graceful=false --reboot
 
 
-  apply-init:
+  apply:
     desc: Applies a single generated configuration from Talhelper to a node
     interactive: true
     vars:
@@ -88,8 +88,8 @@ tasks:
       image: "{{.image | default nil}}"
     cmds:
       - talosctl -n {{.node}} upgrade --image {{.image}} --preserve=true
-    preconditions:
-      - talosctl -n {{.node}} get mc
+    # preconditions:
+    #   - talosctl get mc -n {{.node}}
 
   upgrade-k8s:
     desc: Upgrade k8s on a node

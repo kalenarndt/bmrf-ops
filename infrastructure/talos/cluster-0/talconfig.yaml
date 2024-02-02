@@ -4,7 +4,7 @@ clusterName: ${clusterName}
 endpoint: https://${clusterEndpointIP}:6443
 
 # renovate: depName=ghcr.io/siderolabs/installer datasource=docker extractVersion=^(?<version>.*)$
-talosVersion: v1.6.2
+talosVersion: v1.6.3
 # renovate: depName=kubernetes/kubernetes datasource=github-releases extractVersion=^v(?<version>.*)$
 kubernetesVersion: v1.29.1
 
@@ -44,18 +44,18 @@ nodes:
             gateway: ${defaultGW}
         vip:
           ip: ${clusterEndpointIP}
-    # patches:
-    #   - |-
-    #     machine:
-    #       kubelet:
-    #         extraMounts:
-    #           - destination: /var/mnt/sata
-    #             type: bind
-    #             source: /var/mnt/sata
-    #             options:
-    #               - rbind
-    #               - rshared
-    #               - rw
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/lib/longhorn
+                type: bind
+                source: /var/lib/longhorn
+                options:
+                  - rbind
+                  - rshared
+                  - rw
   - hostname: talos02.${clusterDomain}
     ipAddress: 172.16.11.12
     installDiskSelector:
@@ -80,18 +80,18 @@ nodes:
             gateway: ${defaultGW}
         vip:
           ip: ${clusterEndpointIP}
-    # patches:
-    #   - |-
-    #     machine:
-    #       kubelet:
-    #         extraMounts:
-    #           - destination: /var/mnt/sata
-    #             type: bind
-    #             source: /var/mnt/sata
-    #             options:
-    #               - rbind
-    #               - rshared
-    #               - rw
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/lib/longhorn
+                type: bind
+                source: /var/lib/longhorn
+                options:
+                  - rbind
+                  - rshared
+                  - rw
   - hostname: talos01.${clusterDomain}
     ipAddress: 172.16.11.11
     installDiskSelector:
@@ -116,18 +116,18 @@ nodes:
             gateway: ${defaultGW}
         vip:
           ip: ${clusterEndpointIP}
-    # patches:
-    #   - |-
-    #     machine:
-    #       kubelet:
-    #         extraMounts:
-    #           - destination: /var/mnt/sata
-    #             type: bind
-    #             source: /var/mnt/sata
-    #             options:
-    #               - rbind
-    #               - rshared
-    #               - rw
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/lib/longhorn
+                type: bind
+                source: /var/lib/longhorn
+                options:
+                  - rbind
+                  - rshared
+                  - rw
 controlPlane:
   schematic:
     customization:
@@ -135,6 +135,8 @@ controlPlane:
         officialExtensions:
           - siderolabs/intel-ucode
           - siderolabs/i915-ucode
+          - siderolabs/iscsi-tools
+          - siderolabs/util-linux-tools
 
   patches:
     # Cluster configuration

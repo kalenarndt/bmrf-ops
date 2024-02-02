@@ -91,13 +91,13 @@ spec:
         nodes:
           - name: "talos01"
             devices:
-              - name: "/dev/sda"
+              - name: "sda"
           - name: "talos02"
             devices:
-              - name: "/dev/sda"
+              - name: "sda"
           - name: "talos03"
             devices:
-              - name: "/dev/sda"
+              - name: "sda"
 
     ingress:
       ingressClassName: "internal-nginx"
@@ -198,7 +198,7 @@ spec:
             bucket:
               interval: 60s
         storageClass:
-          enabled: false
+          enabled: true
           name: ceph-bucket
           reclaimPolicy: Delete
           parameters:

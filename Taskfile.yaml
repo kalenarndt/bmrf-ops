@@ -24,12 +24,12 @@ includes:
   talos:
     taskfile: .taskfiles/talos
     dir: .taskfiles/talos
-  # externalsecrets:
-  #   taskfile: .taskfiles/externalsecrets
-  #   dir: .taskfiles/externalsecrets
-  # rook:
-  #   taskfile: ".taskfiles/rook"
-  #   dir: .taskfiles/rook
+  externalsecrets:
+    taskfile: .taskfiles/externalsecrets
+    dir: .taskfiles/externalsecrets
+  rook:
+    taskfile: ".taskfiles/rook"
+    dir: .taskfiles/rook
   # volsync:
   #   taskfile: ".taskfiles/volsync"
   #   dir: .taskfiles/volsync
@@ -39,4 +39,3 @@ tasks:
     silent: true
     cmds:
       - task -l
-      - echo "{{.CLUSTER}}"
