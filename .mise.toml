@@ -1,2 +1,3 @@
 [tools]
-talhelper = "1.17.1"
+talhelper = "latest"
+talosctl = "latest"
