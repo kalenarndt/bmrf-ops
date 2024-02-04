@@ -1,4 +1,4 @@
 [tools]
-talhelper = "latest"
+talhelper = "2.0.2"
 talosctl = "latest"
 k9s = "latest"

@@ -29,10 +29,10 @@ nodes:
       - name: br_netfilter
         parameters:
           - nf_conntrack_max=131072
-    # machineDisks:
-    #   - device: /dev/sda
-    #     partitions:
-    #       - mountpoint: /var/mnt/sata
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/sata
     networkInterfaces:
       - deviceSelector:
           driver: e1000e
@@ -49,9 +49,9 @@ nodes:
         machine:
           kubelet:
             extraMounts:
-              - destination: /var/lib/longhorn
+              - destination: /var/mnt/sata
                 type: bind
-                source: /var/lib/longhorn
+                source: /var/mnt/sata
                 options:
                   - rbind
                   - rshared
@@ -65,10 +65,10 @@ nodes:
       - name: br_netfilter
         parameters:
           - nf_conntrack_max=131072
-    # machineDisks:
-    #   - device: /dev/sda
-    #     partitions:
-    #       - mountpoint: /var/mnt/sata
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/sata
     networkInterfaces:
       - deviceSelector:
           driver: e1000e
@@ -85,9 +85,9 @@ nodes:
         machine:
           kubelet:
             extraMounts:
-              - destination: /var/lib/longhorn
+              - destination: /var/mnt/sata
                 type: bind
-                source: /var/lib/longhorn
+                source: /var/mnt/sata
                 options:
                   - rbind
                   - rshared
@@ -101,10 +101,10 @@ nodes:
       - name: br_netfilter
         parameters:
           - nf_conntrack_max=131072
-    # machineDisks:
-    #   - device: /dev/sda
-    #     partitions:
-    #       - mountpoint: /var/mnt/sata
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/sata
     networkInterfaces:
       - deviceSelector:
           driver: e1000e
@@ -121,9 +121,9 @@ nodes:
         machine:
           kubelet:
             extraMounts:
-              - destination: /var/lib/longhorn
+              - destination: /var/mnt/sata
                 type: bind
-                source: /var/lib/longhorn
+                source: /var/mnt/sata
                 options:
                   - rbind
                   - rshared
