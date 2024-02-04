@@ -1,0 +1,10 @@
+persistence:
+  defaultClass: false # Don't set "longhorn" to be the default class
+service:
+  ui:
+    type: ClusterIP
+defaultSettings:
+  defaultDataPath: /var/mnt/sata
+  backupTarget: "nfs://172.16.0.4:/volume1/k8s/longhorn-backups"
+  replicaAutoBalance: "best-effort"
+  defaultDataLocality: "best-effort"
