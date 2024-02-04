@@ -22,7 +22,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  path: "./kubernetes/cluster-0/apps/storage/longhorn/app/jobs"
+  path: "./kubernetes/cluster-0/apps/storage/longhorn/jobs"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -39,7 +39,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  path: "./kubernetes/cluster-0/apps/storage/longhorn/app/storage-classes"
+  path: "./kubernetes/cluster-0/apps/storage/longhorn/storage-classes"
   prune: true
   sourceRef:
     kind: GitRepository
