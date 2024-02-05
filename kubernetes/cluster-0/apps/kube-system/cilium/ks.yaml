@@ -11,5 +11,5 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: talos-homelab
+    name: bmrf-ops
   wait: true
