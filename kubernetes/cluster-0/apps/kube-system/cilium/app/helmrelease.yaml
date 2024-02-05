@@ -15,8 +15,18 @@ spec:
         name: cilium
         namespace: flux-system
       version: 1.14.3
-  interval: 30m
-
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 5
+    crds: CreateReplace
+  upgrade:
+    remediation:
+      retries: 5
+    crds: CreateReplace
+    cleanupOnFail: true
+  uninstall:
+    keepHistory: false
   valuesFrom:
     - kind: ConfigMap
       name: cilium-values
