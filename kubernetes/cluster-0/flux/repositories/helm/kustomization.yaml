@@ -19,6 +19,5 @@ resources:
   - kubernetes-sigs-metrics-server.yaml
   - kubernetes-sigs-external-dns.yaml
   - kubernetes-sigs-descheduler.yaml
-  - rook-ceph.yaml
   - cilium.yaml
   - postfinance.yaml
