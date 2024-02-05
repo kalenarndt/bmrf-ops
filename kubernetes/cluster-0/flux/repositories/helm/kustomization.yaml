@@ -20,3 +20,4 @@ resources:
   - kubernetes-sigs-external-dns.yaml
   - kubernetes-sigs-descheduler.yaml
   - rook-ceph.yaml
+  - cilium.yaml
