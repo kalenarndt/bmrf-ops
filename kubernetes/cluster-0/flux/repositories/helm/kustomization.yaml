@@ -21,3 +21,4 @@ resources:
   - kubernetes-sigs-descheduler.yaml
   - rook-ceph.yaml
   - cilium.yaml
+  - postfinance.yaml
