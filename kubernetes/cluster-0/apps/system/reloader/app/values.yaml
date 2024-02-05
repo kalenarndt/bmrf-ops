@@ -2,7 +2,7 @@
 fullnameOverride: reloader
 reloader:
   podMonitor:
-    enabled: true
+    enabled: false
   reloadStrategy: annotations
   deployment:
     resources:
