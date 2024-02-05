@@ -11,3 +11,4 @@ resources:
   - ./kube-system
   - ./csi-addons-system
   - ./storage
+  - ./system-controllers
