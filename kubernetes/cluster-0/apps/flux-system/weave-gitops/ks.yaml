@@ -12,6 +12,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: bmrf-ops
-  wait: false # no flux ks dependents
+  wait: false
   dependsOn:
     - name: cluster-apps-external-secrets-stores
