@@ -59,7 +59,7 @@ controller:
       namespaceSelector:
         any: true
   extraArgs:
-    default-ssl-certificate: "${SECRET_DOMAIN}-tls"
+    default-ssl-certificate: "network/${SECRET_DOMAIN}-tls"
   topologySpreadConstraints:
     - maxSkew: 2
       topologyKey: kubernetes.io/hostname
