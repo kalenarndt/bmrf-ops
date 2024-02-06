@@ -21,3 +21,4 @@ resources:
   - kubernetes-sigs-descheduler.yaml
   - cilium.yaml
   - postfinance.yaml
+  - emberstack.yaml
