@@ -6,7 +6,7 @@ service:
 ingress:
   enabled: true
   ingressClassName: internal-nginx
-  host: &tlonghorn.${SECRET_DOMAIN}
+  host: tlonghorn.${SECRET_DOMAIN}
   tls: true
 defaultSettings:
   defaultDataPath: /var/mnt/sata
