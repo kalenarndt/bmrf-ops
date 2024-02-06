@@ -6,11 +6,12 @@ service:
 ingress:
   enabled: true
   ingressClassName: internal-nginx
-  host: tlonghorn.${SECRET_DOMAIN}
-  tls: true
-  tlsSecret: bmrf.io-tls
-  annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  host: &tlonghorn.${SECRET_DOMAIN}
+  tls: false
+  path: /
+  # tlsSecret: bmrf.io-tls
+  # annotations:
+  #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 defaultSettings:
   defaultDataPath: /var/mnt/sata
   backupTarget: "nfs://172.16.0.4:/volume1/k8s/longhorn-backups"
