@@ -7,8 +7,8 @@ ingress:
   enabled: true
   ingressClassName: internal-nginx
   host: tlonghorn.${SECRET_DOMAIN}
-#   tls: true
-#   tlsSecret: longhorn-tls
+  tls: true
+  tlsSecret: bmrf.io-tls
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 defaultSettings:
