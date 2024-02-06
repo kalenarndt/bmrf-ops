@@ -12,3 +12,4 @@ spec:
     kind: GitRepository
     name: bmrf-ops
   wait: false # no flux ks dependents
+fl
