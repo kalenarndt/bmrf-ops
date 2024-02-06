@@ -15,3 +15,18 @@ spec:
         name: kubernetes-sigs-external-dns
         namespace: flux-system
       interval: 30m
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 5
+    crds: CreateReplace
+  upgrade:
+    remediation:
+      retries: 5
+    crds: CreateReplace
+    cleanupOnFail: true
+  uninstall:
+    keepHistory: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: externaldns-values
