@@ -1,0 +1,45 @@
+interval: 1m
+logLevel: debug
+provider: rfc2136
+env:
+  - name: EXTERNAL_DNS_RFC2136_HOST
+    value: "172.16.2.2"
+  - name: EXTERNAL_DNS_RFC2136_PORT
+    value: "53"
+  - name: EXTERNAL_DNS_RFC2136_ZONE
+    value: "${SECRET_DOMAIN}"
+  - name: EXTERNAL_DNS_RFC2136_TSIG_AXFR
+    value: "true"
+  - name: EXTERNAL_DNS_RFC2136_TSIG_KEYNAME
+    value: externaldns
+  - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET_ALG
+    valueFrom:
+      secretKeyRef:
+        name: externaldns-internal-secrets
+        key: bind_rndc_algorithm
+  - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: externaldns-internal-secrets
+        key: bind_rndc_secret
+extraArgs:
+  - --rfc2136-host=172.16.2.2
+  - --rfc2136-port=5354
+  - --rfc2136-zone=${SECRET_DOMAIN}
+  - --rfc2136-tsig-secret-alg=hmac-sha256
+  - --rfc2136-tsig-keyname=${SECRET_EDNS_TSIG_KEY_NAME}
+  - --rfc2136-tsig-secret=${SECRET_EDNS_TSIG_KEY}
+  - --rfc2136-tsig-axfr
+policy: sync
+sources:
+    - ingress
+    - service
+txtPrefix: "_owner."
+txtOwnerId: k3s
+
+resources:
+  requests:
+    cpu: 16m
+    memory: 90M
+  limits:
+    memory: 90M
