@@ -3,14 +3,14 @@ persistence:
 service:
   ui:
     type: ClusterIP
-# ingress:
-#   enabled: true
-#   ingressClassName: internal-nginx
-#   host: tlonghorn.${SECRET_DOMAIN}
+ingress:
+  enabled: true
+  ingressClassName: internal-nginx
+  host: tlonghorn.${SECRET_DOMAIN}
 #   tls: true
 #   tlsSecret: longhorn-tls
-#   annotations:
-#     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 defaultSettings:
   defaultDataPath: /var/mnt/sata
   backupTarget: "nfs://172.16.0.4:/volume1/k8s/longhorn-backups"
