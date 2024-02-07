@@ -6,7 +6,7 @@ logLevel: info
 
 adminUser:
   create: true
-  username: admin
+  username: &admin_user admin
 
 networkPolicy:
   create: false
@@ -32,7 +32,7 @@ ingress:
   enabled: true
   className: internal-nginx
   hosts:
-    - host: tgitops.bmrf.io
+    - host: &host "tgitops.bmrf.io"
       paths:
         - path: /
           pathType: Prefix
