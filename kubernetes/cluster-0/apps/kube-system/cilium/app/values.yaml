@@ -80,7 +80,10 @@ hubble:
   ui:
     enabled: true
     ingress:
-      enabled: false
+      enabled: true
+      className: "internal-nginx"
+      hosts:
+       - hubble.bmrf.io
     rollOutPods: true
 
 securityContext:
