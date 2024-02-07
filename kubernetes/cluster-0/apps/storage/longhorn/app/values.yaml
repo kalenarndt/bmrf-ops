@@ -13,3 +13,5 @@ defaultSettings:
   backupTarget: "nfs://172.16.0.4:/volume1/k8s/longhorn-backups"
   replicaAutoBalance: "best-effort"
   defaultDataLocality: "best-effort"
+annotations:
+  configmap.reloader.stakater.com/reload: auto
