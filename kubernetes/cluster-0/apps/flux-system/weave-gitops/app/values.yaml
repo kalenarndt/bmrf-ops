@@ -7,7 +7,6 @@ logLevel: info
 adminUser:
   create: true
   username: &admin_user admin
-  passwordHash:
 
 networkPolicy:
   create: false
