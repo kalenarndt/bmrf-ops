@@ -30,7 +30,7 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: weave-gitops-values
-    - kind: Secret
-      name: weave-gitops-secrets
-      valuesKey: admin-password
-      targetPath: adminUser.passwordHash
+    # - kind: Secret
+    #   name: weave-gitops-secrets
+    #   valuesKey: admin-password
+    #   targetPath: adminUser.passwordHash
