@@ -40,8 +40,4 @@ ingress:
   #   - hosts:
   #       - *host
 
-valuesFrom:
-- kind: Secret
-  name: weave-gitops-secrets
-  valuesKey: admin-password
-  targetPath: adminUser.passwordHash
+
