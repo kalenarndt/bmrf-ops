@@ -15,4 +15,3 @@ defaultSettings:
   defaultDataLocality: "best-effort"
 annotations:
   configmap.reloader.stakater.com/reload: auto
-enablePSP: true
