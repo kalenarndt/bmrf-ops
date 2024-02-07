@@ -46,7 +46,7 @@ tasks:
       NODE: "{{.NODE | default nil}}"
     cmds:
       - for: {var: NODE}
-        cmd: talosctl apply-config -n {{.ITEM}} -f {{.TALOS_DIR}}/clusterconfig/talos-{{.ITEM}}.yaml --insecure
+        cmd: talosctl apply-config -n {{.ITEM}} -f {{.TALOS_DIR}}/clusterconfig/talos-{{.ITEM}}.yaml
 
 
   bootstrap:
