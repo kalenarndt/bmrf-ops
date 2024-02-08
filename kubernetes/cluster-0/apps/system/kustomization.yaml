@@ -10,3 +10,4 @@ resources:
   - ./reloader/ks.yaml
   - ./reflector/ks.yaml
   - ./descheduler/ks.yaml
+  - ./spegel/ks.yaml
