@@ -22,3 +22,4 @@ resources:
   - cilium.yaml
   - postfinance.yaml
   - emberstack.yaml
+  - spegel.yaml
