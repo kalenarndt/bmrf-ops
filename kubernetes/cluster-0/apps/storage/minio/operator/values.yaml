@@ -3,6 +3,6 @@ operator:
   ingress:
     enabled: true
     ingressClassName: "internal-nginx"
-    host: &app-host minio.bmrf.io
+    host: tminio.bmrf.io
     path: /
     pathType: Prefix
