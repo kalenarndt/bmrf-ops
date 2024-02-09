@@ -2,7 +2,5 @@
 operator:
   ingress:
     enabled: true
-    ingressClassName: "internal-nginx"
-    host: tminio.bmrf.io
-    path: /
-    pathType: Prefix
+    ingressClassName: internal-nginx
+    host: tminio.${SECRET_DOMAIN}
