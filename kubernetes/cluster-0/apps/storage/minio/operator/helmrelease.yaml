@@ -70,11 +70,6 @@ spec:
       #      digest: 28c80b379c75242c6fe793dfbf212f43c602140a0de5ebe3d9c2a3a7b9f9f983
       #      pullPolicy: IfNotPresent
       #
-      image:
-        repository: quay.io/minio/operator
-        tag: v5.0.12
-        pullPolicy: IfNotPresent
-      ###
       #
       # An array of Kubernetes secrets to use for pulling images from a private ``image.repository``.
       # Only one array element is supported at this time.
@@ -210,10 +205,6 @@ spec:
       #      pullPolicy: IfNotPresent
       #
       # The specified values should match that of ``operator.image`` to ensure predictable operations.
-      image:
-        repository: quay.io/minio/operator
-        tag: v5.0.12
-        pullPolicy: IfNotPresent
       ###
       # An array of environment variables to pass to the Operator Console deployment.
       # Pass an empty array to start Operator Console with defaults.
