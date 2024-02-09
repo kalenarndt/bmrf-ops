@@ -1,0 +1,8 @@
+---
+operator:
+  ingress:
+    enabled: true
+    ingressClassName: "internal-nginx"
+    host: &app-host minio.bmrf.io
+    path: /
+    pathType: Prefix
