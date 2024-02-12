@@ -43,4 +43,4 @@ spec:
   dependsOn:
     - name: cloudnative-pg-operator
     - name: cluster-apps-storage-longhorn
-    - name: external-secrets-stores
+    - name: cluster-apps-external-secrets-stores
