@@ -19,10 +19,10 @@ spec:
       owner:
         valueFrom:
           secretKeyRef:
-            name: coder-postgres-user
+            name: coder-postgresql-user
             key: username
       secret:
-        name: coder-postgres-password
+        name: coder-postgresql-user
   postgresql:
     parameters:
       max_connections: "600"
