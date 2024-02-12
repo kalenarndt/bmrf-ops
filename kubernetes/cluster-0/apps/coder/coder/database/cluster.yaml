@@ -16,11 +16,7 @@ spec:
   bootstrap:
     initdb:
       database: coder
-      owner:
-        valueFrom:
-          secretKeyRef:
-            name: coder-postgresql-user
-            key: username
+      owner: coder
       secret:
         name: coder-postgresql-user
   postgresql:
