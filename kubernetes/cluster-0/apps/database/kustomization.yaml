@@ -5,5 +5,4 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations
-  - ./crunchy-postgres-operator/ks.yaml
   - ./cloudnative-pg-operator/ks.yaml
