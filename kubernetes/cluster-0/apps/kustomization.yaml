@@ -13,3 +13,4 @@ resources:
   - ./storage
   - ./system-controllers
   - ./database
+  - ./coder
