@@ -25,3 +25,4 @@ resources:
   - spegel.yaml
   - minio.yaml
   - crunchydata.yaml
+  - cloudnative-pg.yaml
