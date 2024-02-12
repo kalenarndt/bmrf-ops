@@ -24,4 +24,4 @@ resources:
   - emberstack.yaml
   - spegel.yaml
   - minio.yaml
-  - crunchydata.yaml
+  - coder.yaml
