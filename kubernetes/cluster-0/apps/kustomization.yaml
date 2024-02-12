@@ -12,3 +12,4 @@ resources:
   - ./csi-addons-system
   - ./storage
   - ./system-controllers
+  - ./database
