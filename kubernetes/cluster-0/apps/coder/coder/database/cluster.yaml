@@ -1,0 +1,31 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: cloudnative-pg
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:14.7
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 10Gi
+    storageClass: lh-two-retain-backup-standard
+  superuserSecret:
+    name: coder-postgresql-su
+  bootstrap:
+    initdb:
+      database: coder
+      owner:
+        valueFrom:
+          secretKeyRef:
+            name: coder-postgres-user
+            key: username
+      secret:
+        name: coder-postgres-password
+  postgresql:
+    parameters:
+      max_connections: "600"
+      shared_buffers: 512MB
+  monitoring:
+    enablePodMonitor: false
