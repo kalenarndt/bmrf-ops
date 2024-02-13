@@ -25,3 +25,4 @@ resources:
   - spegel.yaml
   - minio.yaml
   - coder.yaml
+  - prometheus-community-charts.yaml
