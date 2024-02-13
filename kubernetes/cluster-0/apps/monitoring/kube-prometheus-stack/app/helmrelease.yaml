@@ -14,7 +14,7 @@ spec:
       version: 56.6.2
       sourceRef:
         kind: HelmRepository
-        name: prometheus-community
+        name: prometheus-community-charts
         namespace: flux-system
       interval: 30m
   install:
@@ -93,7 +93,7 @@ spec:
           memory: 153M
     coreDns:
       enabled: true
-      
+
     nodeExporter:
       enabled: false
 
