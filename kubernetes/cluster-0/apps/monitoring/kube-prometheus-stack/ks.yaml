@@ -20,4 +20,3 @@ spec:
   dependsOn:
     # - name: alertmanager
     - name: cluster-apps-storage-longhorn
-    - name: external-secrets-stores
