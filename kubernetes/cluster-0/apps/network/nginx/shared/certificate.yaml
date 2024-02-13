@@ -10,8 +10,8 @@ spec:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
       reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "longhorn-system"
-      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "longhorn-system"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "longhorn-system, coder"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "longhorn-system, coder"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
