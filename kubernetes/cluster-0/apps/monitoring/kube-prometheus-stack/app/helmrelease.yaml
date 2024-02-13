@@ -30,7 +30,7 @@ spec:
     ### Component values
     ###
     alertmanager:
-      enabled: false
+      enabled: true
 
     kubeApiServer:
       enabled: true
