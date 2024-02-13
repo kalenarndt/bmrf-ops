@@ -32,3 +32,4 @@ coder:
     tls:
       enable: true
       secretName: ${SECRET_DOMAIN}-tls
+      wildcardSecretName: ${SECRET_DOMAIN}-tls
