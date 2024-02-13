@@ -14,3 +14,4 @@ resources:
   - ./system-controllers
   - ./database
   - ./coder
+  - ./monitoring
