@@ -3,9 +3,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-nginx-shared
+  name: &appname_shared cluster-apps-nginx-shared
   namespace: flux-system
 spec:
+  targetNamespace: network
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *appname_shared
   interval: 10m
   path: "./kubernetes/cluster-0/apps/network/nginx/shared"
   prune: true
@@ -20,9 +24,13 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-nginx-external
+  name: &appname_external cluster-apps-nginx-external
   namespace: flux-system
 spec:
+  targetNamespace: network
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *appname_external
   interval: 10m
   path: "./kubernetes/cluster-0/apps/network/nginx/external"
   prune: true
@@ -37,9 +45,13 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-nginx-internal
+  name: &appname_internal cluster-apps-nginx-internal
   namespace: flux-system
 spec:
+  targetNamespace: network
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *appname_internal
   interval: 10m
   path: "./kubernetes/cluster-0/apps/network/nginx/internal"
   prune: true
