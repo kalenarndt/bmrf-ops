@@ -3,7 +3,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: "${SECRET_DOMAIN}-wildcard"
-  namespace: network
 spec:
   secretName: "${SECRET_DOMAIN}-tls"
   secretTemplate:
