@@ -6,7 +6,6 @@ controller:
     type: RollingUpdate
   allowSnippetAnnotations: true
   enableAnnotationValidations: true
-
   service:
     enabled: true
     type: LoadBalancer
@@ -14,24 +13,21 @@ controller:
       external-dns.alpha.kubernetes.io/hostname: "ingress-ext.${SECRET_DOMAIN}"
       io.cilium/lb-ipam-ips: "10.45.0.4"
     externalTrafficPolicy: Cluster
-
   publishService:
     enabled: true
-
   ingressClassResource:
     name: external-nginx
     default: true
     controllerValue: k8s.io/ingress-nginx-external
-      admissionWebhooks:
-        objectSelector:
-          matchExpressions:
-            - key: ingress-class
-              operator: In
-              values:
-                - external-nginx
-
+  admissionWebhooks:
+    objectSelector:
+      matchExpressions:
+        - key: ingress-class
+          operator: In
+          values:
+            - external-nginx
   config:
-    block-user-agents: "GPTBot,~*GPTBot*,ChatGPT-User,~*ChatGPT-User*,Google-Extended,~*Google-Extended*,CCBot,~*CCBot*,Omgilibot,~*Omgilibot*,FacebookBot,~*FacebookBot*" # taken from https://github.com/superseriousbusiness/gotosocial/blob/main/internal/web/robots.go
+    block-user-agents: "GPTBot,~*GPTBot*,ChatGPT-User,~*ChatGPT-User*,Google-Extended,~*Google-Extended*,CCBot,~*CCBot*,Omgilibot,~*Omgilibot*,FacebookBot,~*FacebookBot*" # taken from https://github.com/superseriousbusiness/gotosocial/blob/main/external/web/robots.go
     client-header-timeout: 120
     client-body-buffer-size: "100M"
     client-body-timeout: 120
@@ -55,34 +51,28 @@ controller:
     proxy-buffer-size: "16k"
     ssl-protocols: "TLSv1.3 TLSv1.2"
     use-forwarded-headers: "true"
-
   metrics:
     enabled: false # TODO Enable later
     serviceMonitor:
       enabled: false # TODO Enable later
-          namespace: network
-          namespaceSelector:
-            any: true
-
+      namespace: network
+      namespaceSelector:
+        any: true
   extraArgs:
     default-ssl-certificate: "network/${SECRET_DOMAIN}-tls"
-
   topologySpreadConstraints:
     - maxSkew: 2
       topologyKey: kubernetes.io/hostname
       whenUnsatisfiable: DoNotSchedule
       labelSelector:
         matchLabels:
-          app.kubernetes.io/instance: nginx-internal
+          app.kubernetes.io/instance: nginx-external
           app.kubernetes.io/component: controller
-
   resources:
     requests:
       cpu: 99m
       memory: 768Mi
     limits:
       memory: 768Mi
-
 defaultBackend:
   enabled: false
-
