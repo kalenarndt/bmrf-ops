@@ -5,5 +5,5 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations
-  # - ./add-ons/ks.yaml #TODO: Add this later 
+  - ./add-ons/ks.yaml #TODO: Add this later
   - ./weave-gitops/ks.yaml

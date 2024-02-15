@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
 tasks:
@@ -18,3 +19,23 @@ tasks:
     preconditions:
       - sh: kubectl --context {{.cluster}} -n {{.ns}} get es {{.secret}}
         msg: "ExternalSecret not found"
+
+  sync-all:
+    desc: Sync all ExternalSecrets for a cluster
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+    cmds:
+      - for: { var: secrets, split: '' }
+        task: sync
+        vars:
+          cluster: '{{.cluster}}'
+          ns: '{{$a := split "|" .ITEM}}{{$a._0}}'
+          secret: '{{$a := split "|" .ITEM}}{{$a._1}}'
+    env:
+      KUBECONFIG: "{{.KUBERNETES_DIR}}/{{.cluster}}/kubeconfig"
+    requires:
+      vars: ["cluster"]
+    vars:
+      secrets:
+        sh: kubectl --context {{.cluster}} get externalsecret --all-namespaces --no-headers -A | awk '{print $1 "|" $2}'
