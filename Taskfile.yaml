@@ -5,7 +5,7 @@ vars:
   CLUSTER_DIR: "{{.ROOT_DIR}}/kubernetes/{{.CLUSTER}}"
   CLUSTER_SECRETS_FILE: "{{.CLUSTER_DIR}}/flux/vars/cluster-secrets.sops.env"
   CLUSTER_SETTINGS_FILE: "{{.CLUSTER_DIR}}/flux/vars/cluster-settings.env"
-  TALOS_DIR: "{{.ROOT_DIR}}/infrastructure/talos/{{.CLUSTER}}"
+  TALOS_DIR: "{{.ROOT_DIR}}/kubernetes/{{.CLUSTER}}/bootstrap/talos"
   TALOS_INTEGRATIONS_DIR: "{{.TALOS_DIR}}/"
   KUBERNETES_APP_DIR: "{{.ROOT_DIR}}/kubernetes/{{.CLUSTER}}/apps"
 
@@ -27,12 +27,10 @@ includes:
   externalsecrets:
     taskfile: .taskfiles/externalsecrets
     dir: .taskfiles/externalsecrets
-  rook:
-    taskfile: ".taskfiles/rook"
-    dir: .taskfiles/rook
-  # volsync:
-  #   taskfile: ".taskfiles/volsync"
-  #   dir: .taskfiles/volsync
+  sops:
+    taskfile: .taskfiles/sops
+    dir: .taskfiles/sops
+
 
 tasks:
   default:

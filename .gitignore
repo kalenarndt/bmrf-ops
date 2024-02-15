@@ -1,11 +1,8 @@
 #------------------------------------------------------------------------------
 # Talos
 #------------------------------------------------------------------------------
-talosconfig.sops.yaml
-talosconfig
-talos-talos03.bmrf.io.yaml
-talos-talos02.bmrf.io.yaml
-talos-talos01.bmrf.io.yaml
+kubernetes/cluster-0/bootstrap/talos/clusterconfig/talosconfig
+kubernetes/cluster-0/bootstrap/talos/clusterconfig/*.yaml
 
 #------------------------------------------------------------------------------
 # Certificates
