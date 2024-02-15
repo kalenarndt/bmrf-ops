@@ -6,4 +6,4 @@ service:
   registry:
     hostPort: 29999
 serviceMonitor:
-  enabled: false #TODO: Add later once I get the monitoring CRD setup
+  enabled: true #TODO: Add later once I get the monitoring CRD setup

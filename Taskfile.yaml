@@ -8,7 +8,7 @@ vars:
   TALOS_DIR: "{{.ROOT_DIR}}/kubernetes/{{.CLUSTER}}/bootstrap/talos"
   TALOS_INTEGRATIONS_DIR: "{{.TALOS_DIR}}/"
   KUBERNETES_APP_DIR: "{{.ROOT_DIR}}/kubernetes/{{.CLUSTER}}/apps"
-
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
 
 env:
   KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"

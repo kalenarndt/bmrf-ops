@@ -52,9 +52,9 @@ controller:
     ssl-protocols: "TLSv1.3 TLSv1.2"
     use-forwarded-headers: "true"
   metrics:
-    enabled: false # TODO Enable later
+    enabled: true # TODO Enable later
     serviceMonitor:
-      enabled: false # TODO Enable later
+      enabled: true # TODO Enable later
       namespace: network
       namespaceSelector:
         any: true

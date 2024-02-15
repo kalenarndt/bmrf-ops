@@ -1,7 +1,45 @@
 ---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
+vars:
+  # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
+  PROMETHEUS_OPERATOR_VERSION: v0.71.2
+
 tasks:
+
+  bootstrap:
+    desc: Bootstrap Flux into a Kubernetes cluster
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+    prompt: Bootstrap Flux into the '{{.cluster}}' cluster... continue?
+    cmds:
+      # Install essential Prometheus Operator CRDs
+      - kubectl --context {{.cluster}} apply --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{.PROMETHEUS_OPERATOR_VERSION}}/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+      - kubectl --context {{.cluster}} apply --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{.PROMETHEUS_OPERATOR_VERSION}}/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
+      - kubectl --context {{.cluster}} apply --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{.PROMETHEUS_OPERATOR_VERSION}}/example/prometheus-operator-crd/monitoring.coreos.com_scrapeconfigs.yaml
+      - kubectl --context {{.cluster}} apply --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{.PROMETHEUS_OPERATOR_VERSION}}/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+      # Install Flux
+      - kubectl --context {{.cluster}} apply --server-side --kustomize {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux
+      # Install secrets and configmaps
+      - sops --decrypt {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux/age-key.secret.sops.yaml | kubectl --context {{.cluster}} apply -f -
+      - sops --decrypt {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux/github-deploy-key.secret.sops.yaml | kubectl --context {{.cluster}} apply -f -
+      - sops --decrypt {{.KUBERNETES_DIR}}/{{.cluster}}/flux/vars/cluster-secrets.secret.sops.yaml | kubectl --context {{.cluster}} apply -f -
+      - kubectl --context {{.cluster}} apply --server-side --kustomize {{.KUBERNETES_DIR}}/{{.cluster}}/flux/vars/cluster-settings.yaml
+      # Install Flux Kustomization resources
+      - kubectl --context {{.cluster}} apply --server-side --kustomize {{.KUBERNETES_DIR}}/{{.cluster}}/flux/config
+    requires:
+      vars: ["cluster"]
+    preconditions:
+      - test -f $SOPS_AGE_KEY_FILE
+      - test -f {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux/age-key.secret.sops.yaml
+      - test -f {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux/github-deploy-key.secret.sops.yaml
+      - test -f {{.KUBERNETES_DIR}}/{{.cluster}}/flux/vars/cluster-settings.yaml
+      - test -f {{.KUBERNETES_DIR}}/{{.cluster}}/flux/vars/cluster-secrets.secret.sops.yaml
+      - sops --decrypt {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux/age-key.secret.sops.yaml
+      - sops --decrypt {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux/github-deploy-key.secret.sops.yaml
+      - sops --decrypt {{.KUBERNETES_DIR}}/{{.cluster}}/flux/vars/cluster-secrets.secret.sops.yaml
 
   verify:
     desc: Verify flux meets the prerequisites
@@ -26,14 +64,6 @@ tasks:
       - sh: test -f {{.CLUSTER_SECRETS_FILE}}
       - sh: test -f {{.CLUSTER_SETTINGS_FILE}}
 
-  install:
-    desc: Install Flux into your cluster, run this again if it fails
-    cmds:
-      - kubectl apply --server-side --kustomize {{.CLUSTER_DIR}}/bootstrap/flux
-      - sops --decrypt {{.CLUSTER_DIR}}/bootstrap/flux/age-key.sops.yaml | kubectl apply -f -
-      - sops --decrypt {{.CLUSTER_DIR}}/bootstrap/flux/github-deploy-key.sops.yaml | kubectl apply -f -
-      - sops --decrypt {{.CLUSTER_DIR}}/flux/vars/cluster-secrets.sops.yaml | kubectl apply -f -
-      - kubectl apply -f {{.CLUSTER_DIR}}/flux/vars/cluster-settings.yaml
 
   kickoff:
     desc: Kicks off Flux applying the repository
