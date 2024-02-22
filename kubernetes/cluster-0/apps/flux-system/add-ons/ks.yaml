@@ -3,17 +3,20 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app
+  name: &appname flux-addons
   namespace: flux-system
 spec:
   targetNamespace: flux-system
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *appname
   interval: 10m
-  path: ./kubernetes/cluster-0/apps/flux-system/add-ons/monitoring"
+  path: ./kubernetes/cluster-0/apps/flux-system/add-ons/monitoring
   prune: true
   sourceRef:
     kind: GitRepository
     name: bmrf-ops
-  wait: true
+  wait: false
 # ---
 # # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
