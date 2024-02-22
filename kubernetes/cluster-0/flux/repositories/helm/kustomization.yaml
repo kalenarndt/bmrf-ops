@@ -26,3 +26,5 @@ resources:
   - minio.yaml
   - coder.yaml
   - prometheus-community-charts.yaml
+  - coredns.yaml
+  - crunchydata.yaml
