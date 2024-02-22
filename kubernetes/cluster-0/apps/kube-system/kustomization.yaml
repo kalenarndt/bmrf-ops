@@ -7,3 +7,4 @@ resources:
   # Flux-Kustomizations
   - ./cilium/ks.yaml
   - ./metrics-server/ks.yaml
+  - ./coredns/ks.yaml
