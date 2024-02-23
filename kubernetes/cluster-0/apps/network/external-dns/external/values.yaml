@@ -1,7 +1,7 @@
 fullnameOverride: &name externaldns-external
 
 domainFilters:
-  - bjw-s.dev
+  - ${SECRET_DOMAIN}
 
 env:
   - name: CF_API_TOKEN
@@ -18,7 +18,8 @@ extraArgs:
 
 podAnnotations:
   secret.reloader.stakater.com/reload: externaldns-external-secrets
-
+  configmap.reloader.stakater.com/reload: auto
+  
 policy: sync
 provider: cloudflare
 
