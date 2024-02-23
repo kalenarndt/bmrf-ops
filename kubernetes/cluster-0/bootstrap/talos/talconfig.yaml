@@ -4,9 +4,9 @@ clusterName: ${clusterName}
 endpoint: https://${clusterEndpointIP}:6443
 
 # renovate: depName=ghcr.io/siderolabs/installer datasource=docker extractVersion=^(?<version>.*)$
-talosVersion: v1.6.3
+talosVersion: v1.6.5
 # renovate: depName=kubernetes/kubernetes datasource=github-releases extractVersion=^v(?<version>.*)$
-kubernetesVersion: v1.29.1
+kubernetesVersion: v1.29.2
 
 allowSchedulingOnMasters: true
 cniConfig:
@@ -17,7 +17,6 @@ additionalApiServerCertSans: &san
   - ${clusterName}.${clusterDomain}
   - "127.0.0.1" #KubePrism https://www.talos.dev/v1.6/kubernetes-guides/configuration/kubeprism/
 additionalMachineCertSans: *san
-
 
 nodes:
   - hostname: talos03.${clusterDomain}
@@ -144,6 +143,12 @@ controlPlane:
       cluster:
         allowSchedulingOnMasters: true
         proxy:
+          disabled: true
+
+    # Disable coreDNS because we are deploying with helmfile and managing with flux
+    - |-
+      cluster:
+        coreDNS:
           disabled: true
 
     # ETCD configuration

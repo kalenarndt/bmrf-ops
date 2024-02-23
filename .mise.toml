@@ -1,0 +1,12 @@
+[tools]
+talhelper = "latest"
+k9s = "latest"
+pre-commit = "latest"
+yamlfmt = "latest"
+task = "latest"
+talosctl = "latest"
+sops = "latest"
+kustomize = "latest"
+kubectl = "latest"
+helm = "latest"
+age = "latest"
