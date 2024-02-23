@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: external-dns
+  name: externaldns-internal
 spec:
   interval: 30m
   chart:
@@ -29,4 +29,4 @@ spec:
     keepHistory: false
   valuesFrom:
     - kind: ConfigMap
-      name: externaldns-values
+      name: externaldns-internal-values
