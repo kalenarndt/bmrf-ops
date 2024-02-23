@@ -14,4 +14,4 @@ spec:
     name: bmrf-ops
   wait: false
   dependsOn:
-    - name: cluster-apps-external-secrets-stores
+    - name: external-secrets-stores

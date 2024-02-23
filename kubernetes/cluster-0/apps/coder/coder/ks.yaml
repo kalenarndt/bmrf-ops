@@ -19,7 +19,7 @@ spec:
   wait: true
   dependsOn:
     - name: cluster-apps-coder-database
-    - name: cluster-apps-external-secrets-stores
+    - name: external-secrets-stores
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -42,4 +42,4 @@ spec:
   dependsOn:
     - name: cloudnative-pg-operator
     - name: cluster-apps-storage-longhorn
-    - name: cluster-apps-external-secrets-stores
+    - name: external-secrets-stores
