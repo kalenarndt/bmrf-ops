@@ -1,4 +1,5 @@
 ---
+fullnameOverride: &name externaldns-internal
 podAnnotations:
   secret.reloader.stakater.com/reload: externaldns-internal-secrets
   configmap.reloader.stakater.com/reload: auto
