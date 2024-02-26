@@ -73,7 +73,7 @@ spec:
       #
       # An array of Kubernetes secrets to use for pulling images from a private ``image.repository``.
       # Only one array element is supported at this time.
-      imagePullSecrets: [ ]
+      imagePullSecrets: []
       ###
       #
       # The name of a custom `Container Runtime <https://kubernetes.io/docs/concepts/containers/runtime-class/>`__ to use for the Operator pods.
@@ -82,7 +82,7 @@ spec:
       # An array of `initContainers <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/>`__ to start up before the Operator pods.
       # Exercise care as ``initContainer`` failures prevent Operator pods from starting.
       # Pass an empty array to start the Operator normally.
-      initContainers: [ ]
+      initContainers: []
       ###
       # The number of Operator pods to deploy.
       # Higher values increase availability in the event of worker node failures.
@@ -110,7 +110,7 @@ spec:
       # An array of `Volumes <https://kubernetes.io/docs/concepts/storage/volumes/>`__ which the Operator can mount to pods.
       #
       # The volumes must exist *and* be accessible to the Operator pods.
-      volumes: [ ]
+      volumes: []
       ###
       # An array of volume mount points associated to each Operator container.
       #
@@ -123,7 +123,7 @@ spec:
       #      mountPath: /path/to/mount
       #
       # The ``name`` field must correspond to an entry in the ``volumes`` array.
-      volumeMounts: [ ]
+      volumeMounts: []
       ###
       # Any `Node Selectors <https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/>`__ to apply to Operator pods.
       #
@@ -155,13 +155,13 @@ spec:
       # An array of `Toleration labels <https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/>`__ to associate to Operator pods.
       #
       # These settings determine the distribution of pods across worker nodes.
-      tolerations: [ ]
+      tolerations: []
       ###
       #
       # An array of `Topology Spread Constraints <https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/>`__ to associate to Operator pods.
       #
       # These settings determine the distribution of pods across worker nodes.
-      topologySpreadConstraints: [ ]
+      topologySpreadConstraints: []
       ###
       #
       # The `Requests or Limits <https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/>`__ for resources to associate to Operator pods.
@@ -208,11 +208,11 @@ spec:
       ###
       # An array of environment variables to pass to the Operator Console deployment.
       # Pass an empty array to start Operator Console with defaults.
-      env: [ ]
+      env: []
       ###
       #
       # An array of Kubernetes secrets to use for pulling images from a private ``image.repository``.
-      imagePullSecrets: [ ]
+      imagePullSecrets: []
       ###
       #
       # The name of a custom `Container Runtime <https://kubernetes.io/docs/concepts/containers/runtime-class/>`__ to use for the Operator Console pods.
@@ -221,7 +221,7 @@ spec:
       # An array of `initContainers <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/>`__ to start up before the Operator Console pods.
       # Exercise care as ``initContainer`` failures prevent Console pods from starting.
       # Pass an empty array to start the Console normally.
-      initContainers: [ ]
+      initContainers: []
       ###
       # The number of Operator Console pods to deploy.
       # Higher values increase availability in the event of worker node failures.
@@ -256,13 +256,13 @@ spec:
       # An array of `Toleration labels <https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/>`__ to associate to Operator Console pods.
       #
       # These settings determine the distribution of pods across worker nodes.
-      tolerations: [ ]
+      tolerations: []
       ###
       #
       # An array of `Topology Spread Constraints <https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/>`__ to associate to Operator Console pods.
       #
       # These settings determine the distribution of pods across worker nodes.
-      topologySpreadConstraints: [ ]
+      topologySpreadConstraints: []
       ###
       #
       # The `Requests or Limits <https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/>`__ for resources to associate to Operator Console pods.
@@ -295,7 +295,7 @@ spec:
         ingressClassName: "internal-nginx"
         labels: { }
         annotations: { }
-        tls: [ ]
+        tls: []
         host: tminio.${SECRET_DOMAIN}
         path: /
         pathType: Prefix

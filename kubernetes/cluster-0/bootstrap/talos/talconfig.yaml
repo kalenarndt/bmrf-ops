@@ -15,7 +15,7 @@ cniConfig:
 additionalApiServerCertSans: &san
   - ${clusterEndpointIP}
   - ${clusterName}.${clusterDomain}
-  - "127.0.0.1" #KubePrism https://www.talos.dev/v1.6/kubernetes-guides/configuration/kubeprism/
+  - "127.0.0.1" # KubePrism https://www.talos.dev/v1.6/kubernetes-guides/configuration/kubeprism/
 additionalMachineCertSans: *san
 
 nodes:

@@ -12,4 +12,3 @@ configMapGenerator:
       - config/config.yaml
 generatorOptions:
   disableNameSuffixHash: true
-
