@@ -11,18 +11,18 @@ coder:
         secretKeyRef:
           name: coder-postgresql-user
           key: connection-url
-    # - name: CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS
-    #   value: "true"
-    # - name: CODER_OAUTH2_GITHUB_CLIENT_ID
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: coder-github-flow
-    #       key: client-id
-    # - name: CODER_OAUTH2_GITHUB_CLIENT_SECRET
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: coder-github-flow
-    #       key: client-secret
+    - name: CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS
+      value: "true"
+    - name: CODER_OAUTH2_GITHUB_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: coder-github-flow
+          key: client-id
+    - name: CODER_OAUTH2_GITHUB_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: coder-github-flow
+          key: client-secret
   ingress:
     enable: true
     className: "internal-nginx"
