@@ -13,6 +13,8 @@ coder:
           key: connection-url
     - name: CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS
       value: "false"
+    - name: CODER_OAUTH2_GITHUB_ALLOWED_ORGS
+      value: "kalenarndt"
     - name: CODER_OAUTH2_GITHUB_CLIENT_ID
       valueFrom:
         secretKeyRef:
