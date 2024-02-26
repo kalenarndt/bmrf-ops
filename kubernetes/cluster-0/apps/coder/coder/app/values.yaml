@@ -16,7 +16,7 @@ coder:
     - name: CODER_OAUTH2_GITHUB_ALLOW_EVERYONE
       value: "true"
     - name: CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS
-      value: "true"
+      value: "false"
     - name: CODER_OAUTH2_GITHUB_CLIENT_ID
       valueFrom:
         secretKeyRef:
