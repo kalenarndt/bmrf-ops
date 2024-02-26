@@ -83,7 +83,7 @@ hubble:
       enabled: true
       className: "internal-nginx"
       hosts:
-       - hubble.bmrf.io
+        - hubble.bmrf.io
     rollOutPods: true
 
 securityContext:

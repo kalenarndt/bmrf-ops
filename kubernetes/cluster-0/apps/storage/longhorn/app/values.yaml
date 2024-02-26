@@ -1,5 +1,6 @@
+---
 persistence:
-  defaultClass: false # Don't set "longhorn" to be the default class
+  defaultClass: false
 service:
   ui:
     type: ClusterIP

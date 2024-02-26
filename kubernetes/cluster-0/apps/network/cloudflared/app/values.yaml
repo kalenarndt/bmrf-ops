@@ -1,4 +1,4 @@
-
+---
 controllers:
   main:
     replicas: 2

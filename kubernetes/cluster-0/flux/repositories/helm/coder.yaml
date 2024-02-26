@@ -9,5 +9,3 @@ spec:
   interval: 2h
   url: https://helm.coder.com/v2
   timeout: 3m
-
-
