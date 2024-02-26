@@ -13,10 +13,10 @@ coder:
         secretKeyRef:
           name: coder-postgresql-user
           key: connection-url
-    - name: CODER_OAUTH2_GITHUB_ALLOW_EVERYONE
-      value: "true"
     - name: CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS
       value: "false"
+    - name: CODER_OAUTH2_GITHUB_ALLOWED_ORGS
+      value: "bmrf-ops"
     - name: CODER_OAUTH2_GITHUB_CLIENT_ID
       valueFrom:
         secretKeyRef:
