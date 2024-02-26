@@ -7,3 +7,4 @@ resources:
   - ./namespace.yaml
   # Flux-Kustomizations
   - ./cloudnative-pg-operator/ks.yaml
+  - ./crunchy-postgres-operator/ks.yaml
