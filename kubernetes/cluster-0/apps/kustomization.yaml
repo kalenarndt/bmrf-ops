@@ -9,7 +9,6 @@ resources:
   - ./system
   - ./network
   - ./kube-system
-  - ./csi-addons-system
   - ./storage
   - ./system-controllers
   - ./database
