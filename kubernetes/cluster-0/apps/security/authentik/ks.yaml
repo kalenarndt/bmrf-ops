@@ -19,3 +19,10 @@ spec:
   wait: true
   dependsOn:
     - name: external-secrets-stores
+
+
+
+  # postBuild:
+  #   substitute:
+  #     APP: *appname
+  #     HOSTNAME: authentik.${SECRET_DOMAIN}
