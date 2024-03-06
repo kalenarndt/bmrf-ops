@@ -1,10 +1,10 @@
 [tools]
-talhelper = "latest"
+talhelper = "2.0.2"
 k9s = "latest"
 pre-commit = "latest"
 yamlfmt = "latest"
 task = "latest"
-talosctl = "latest"
+talosctl = "1.6.2"
 sops = "latest"
 kustomize = "latest"
 kubectl = "latest"
