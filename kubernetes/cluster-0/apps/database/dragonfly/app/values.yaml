@@ -1,0 +1,39 @@
+---
+replicaCount: 1
+storage:
+  enabled: true
+  requests: 1Gi
+  storageClassName: longhorn-one-delete
+extraArgs:
+  - --dbfilename=dump
+  - --snapshot_cron=* * * * * # cron format
+  - --default_lua_flags=allow-undeclared-keys
+podSecurityContext:
+  fsGroup: 2000
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+serviceMonitor:
+  enabled: true
+prometheusRule:
+  enabled: false
+  spec:
+    - alert: DragonflyMissing
+      expr: absent(dragonfly_uptime_in_seconds) == 1
+      for: 0m
+      labels:
+        severity: critical
+      annotations:
+        summary: Dragonfly is missing
+        description: "Dragonfly is missing"
