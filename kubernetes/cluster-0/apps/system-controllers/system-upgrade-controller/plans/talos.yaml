@@ -14,9 +14,8 @@ spec:
   concurrency: 1
   cordon: true
   drain:
-    force: true
     deleteLocalData: true
-    disableEviction: false
+    disableEviction: true # This will force drain the node
     ignoreDaemonSets: true
   exclusive: true
   nodeSelector:
