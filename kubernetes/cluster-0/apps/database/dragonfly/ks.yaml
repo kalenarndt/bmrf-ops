@@ -7,9 +7,6 @@ metadata:
   namespace: flux-system
 spec:
   targetNamespace: database
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *appname
   interval: 10m
   path: ./kubernetes/cluster-0/apps/database/dragonfly/app/
   prune: true
