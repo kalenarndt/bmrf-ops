@@ -29,3 +29,4 @@ resources:
   - coredns.yaml
   - crunchydata.yaml
   - crunchy-userinit-controller.yaml
+  - dragonfly.yaml
