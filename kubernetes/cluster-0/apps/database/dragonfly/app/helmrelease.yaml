@@ -14,12 +14,19 @@ spec:
         kind: HelmRepository
         name: dragonfly
         namespace: flux-system
+      interval: 30m
+  maxHistory: 2
   install:
     remediation:
-      retries: 3
+      retries: 5
+    crds: CreateReplace
   upgrade:
-    cleanupOnFail: true
     remediation:
-      retries: 3
+      retries: 5
+    crds: CreateReplace
+    cleanupOnFail: true
   uninstall:
     keepHistory: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: dragonfly-values
