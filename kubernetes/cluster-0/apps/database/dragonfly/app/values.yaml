@@ -3,7 +3,7 @@ replicaCount: 1
 storage:
   enabled: true
   requests: 1Gi
-  storageClassName: longhorn-one-delete
+  storageClassName: lh-one-delete
 extraArgs:
   - --dbfilename=dump
   - --snapshot_cron=* * * * * # cron format
