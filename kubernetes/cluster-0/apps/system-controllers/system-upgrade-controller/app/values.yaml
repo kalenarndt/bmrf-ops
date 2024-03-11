@@ -1,4 +1,15 @@
 ---
+defaultPodOptions:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
 controllers:
   main:
     strategy: RollingUpdate
@@ -13,16 +24,6 @@ controllers:
               - matchExpressions:
                   - key: node-role.kubernetes.io/control-plane
                     operator: Exists
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
-        allowPrivilegeEscalation: false
-        seccompProfile:
-          type: RuntimeDefault
-        capabilities:
-          drop:
-            - ALL
       tolerations:
         - key: CriticalAddonsOnly
           operator: Exists
@@ -86,7 +87,7 @@ persistence:
     type: emptyDir
 
 service:
-  main:
+  controller: main
     enabled: false
 
 serviceAccount:
