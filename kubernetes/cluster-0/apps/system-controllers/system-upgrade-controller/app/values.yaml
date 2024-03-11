@@ -10,6 +10,7 @@ defaultPodOptions:
     capabilities:
       drop:
         - ALL
+
 controllers:
   app:
     strategy: RollingUpdate
@@ -85,11 +86,6 @@ persistence:
         readOnly: true
   tmp:
     type: emptyDir
-
-service:
-  app:
-    controller: app
-    enabled: false
 
 serviceAccount:
   name: system-upgrade
