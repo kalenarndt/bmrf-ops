@@ -4,12 +4,9 @@ defaultPodOptions:
     runAsNonRoot: true
     runAsUser: 65534
     runAsGroup: 65534
-    allowPrivilegeEscalation: false
     seccompProfile:
       type: RuntimeDefault
-    capabilities:
-      drop:
-        - ALL
+
 
 controllers:
   app:
@@ -46,6 +43,11 @@ controllers:
         image:
           repository: docker.io/rancher/system-upgrade-controller
           tag: v0.13.4
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
         env:
           SYSTEM_UPGRADE_CONTROLLER_DEBUG: false
           SYSTEM_UPGRADE_CONTROLLER_THREADS: 2
