@@ -10,7 +10,6 @@ resources:
   - ./intel.yaml
   - ./longhorn.yaml
   - ./node-feature-discovery.yaml
-  - ./weave-gitops.yaml
   - ./external-secrets.yaml
   - ./jetstack.yaml
   - ./skakater.yaml
