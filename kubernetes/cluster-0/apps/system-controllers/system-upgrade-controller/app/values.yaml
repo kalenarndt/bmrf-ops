@@ -11,7 +11,7 @@ defaultPodOptions:
       drop:
         - ALL
 controllers:
-  main:
+  app:
     strategy: RollingUpdate
     annotations:
       reloader.stakater.com/auto: "true"
@@ -41,7 +41,7 @@ controllers:
           effect: NoExecute
 
     containers:
-      main:
+      app:
         image:
           repository: docker.io/rancher/system-upgrade-controller
           tag: v0.13.4
@@ -87,7 +87,8 @@ persistence:
     type: emptyDir
 
 service:
-  controller: main
+  app:
+    controller: app
     enabled: false
 
 serviceAccount:
