@@ -9,3 +9,5 @@ spec:
   interval: 3h
   url: oci://ghcr.io/gimlet-io/capacitor-manifests
   timeout: 3m
+  ref:
+    semver: ">=0.1.0"
