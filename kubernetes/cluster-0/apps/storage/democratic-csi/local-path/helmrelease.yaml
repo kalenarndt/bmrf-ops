@@ -1,0 +1,30 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: local-path-provisioner
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: democratic-csi
+      version: 0.14.5
+      sourceRef:
+        name: democratic-csi
+        kind: HelmRepository
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 5
+    crds: CreateReplace
+  upgrade:
+    remediation:
+      retries: 5
+    crds: CreateReplace
+    cleanupOnFail: true
+  uninstall:
+    keepHistory: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: democratic-csi-values
