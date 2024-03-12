@@ -29,3 +29,4 @@ resources:
   - ./crunchydata.yaml
   - ./crunchy-userinit-controller.yaml
   - ./dragonfly.yaml
+  - ./democratic-csi.yaml
