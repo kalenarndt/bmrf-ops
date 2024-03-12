@@ -13,12 +13,6 @@ storageClasses:
     # distributed support is not yet ready for expansion
     allowVolumeExpansion: false
 
-volumeSnapshotClasses:
-  - name: local-hostpath
-    deletionPolicy: Delete
-    parameters:
-      dummy: {}
-
 controller:
   enabled: true
   strategy: node
