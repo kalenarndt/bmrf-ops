@@ -1,5 +1,7 @@
 ---
 replicaCount: 1
+annotations:
+  reloader.stakater.com/auto: "true"
 storage:
   enabled: true
   requests: 1Gi
