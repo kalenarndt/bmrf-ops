@@ -3,7 +3,7 @@ replicaCount: 1
 storage:
   enabled: true
   requests: 1Gi
-  storageClassName: lh-one-delete
+  storageClassName: local-hostpath
 extraArgs:
   - --dbfilename=dump
   - --snapshot_cron=* * * * * # cron format
