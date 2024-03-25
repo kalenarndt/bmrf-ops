@@ -26,7 +26,5 @@ resources:
   - ./coder.yaml
   - ./prometheus-community-charts.yaml
   - ./coredns.yaml
-  - ./crunchydata.yaml
-  - ./crunchy-userinit-controller.yaml
   - ./dragonfly.yaml
   - ./democratic-csi.yaml
