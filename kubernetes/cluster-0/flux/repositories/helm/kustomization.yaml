@@ -28,3 +28,5 @@ resources:
   - ./coredns.yaml
   - ./dragonfly.yaml
   - ./democratic-csi.yaml
+  - ./crunchy-data.yaml
+  - ./crunchy-userinit.yaml
