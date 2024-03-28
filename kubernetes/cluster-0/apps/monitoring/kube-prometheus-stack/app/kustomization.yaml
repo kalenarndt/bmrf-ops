@@ -4,3 +4,9 @@ kind: Kustomization
 resources:
   # - ./externalsecret.yaml
   - ./helmrelease.yaml
+configMapGenerator:
+  - name: kube-prometheus-stack-values
+    files:
+      - values.yaml=values.yaml
+configurations:
+  - kustomizeconfig.yaml
