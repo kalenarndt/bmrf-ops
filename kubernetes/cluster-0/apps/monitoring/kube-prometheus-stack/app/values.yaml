@@ -8,7 +8,7 @@ alertmanager:
     pathType: Prefix
     ingressClassName: internal-nginx
     hosts:
-      - &host alertmanager.${SECRET_DOMAIN}
+      - &host talertmanager.${SECRET_DOMAIN}
     tls:
       - hosts: [*host]
   alertmanagerSpec:
@@ -65,7 +65,7 @@ prometheus:
     ingressClassName: internal-nginx
     pathType: Prefix
     hosts:
-      - &host prometheus.${SECRET_DOMAIN}
+      - &host tprometheus.${SECRET_DOMAIN}
     tls:
       - hosts: [*host]
   thanosService:
