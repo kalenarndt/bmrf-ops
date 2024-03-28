@@ -5,7 +5,6 @@
 - [ ] Create central DB cluster to save resources (Use crunchydb operator)
 - [x] Deploy Authentik (Redis)
 - [ ] Deploy Authentik (App)
-- [ ] Deploy Terraform Controller for Flux
 - [ ] Deploy Wallos
 - [ ] Migrate media stack
 
