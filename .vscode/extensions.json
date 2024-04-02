@@ -3,13 +3,13 @@
         "albert.TabOut",
         "hashicorp.terraform",
         "ms-kubernetes-tools.vscode-kubernetes-tools",
-        "ms-vscode-remote.remote-containers",
         "signageos.signageos-vscode-sops",
         "redhat.ansible",
         "mikestead.dotenv",
         "mitchdenny.ecdc",
         "redhat.vscode-yaml",
         "tamasfe.even-better-toml",
-        "oderwat.indent-rainbow"
+        "oderwat.indent-rainbow",
+        "EditorConfig.EditorConfig"
     ]
 }
