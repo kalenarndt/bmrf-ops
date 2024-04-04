@@ -7,7 +7,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  url: https://github.com/kalenarndt/bmrf-media.git
+  url: ssh://github.com/kalenarndt/bmrf-media.git
   ref:
     branch: main
   secretRef:
