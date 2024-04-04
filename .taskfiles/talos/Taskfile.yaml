@@ -55,8 +55,8 @@ tasks:
     requires:
       vars:
         - cluster
-    preconditions:
-      - talosctl config get-contexts | grep {{.cluster}}
+    # preconditions:
+    #   - talosctl config get-contexts | grep {{.cluster}}
 
   generate-clusterconfig:
     desc: Generate clusterconfig for Talos
