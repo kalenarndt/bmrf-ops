@@ -6,4 +6,4 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations
-  - ./coder/ks.yaml # TODO: See if there a way to modify this to be better
+  # - ./coder/ks.yaml # TODO: See if there a way to modify this to be better
