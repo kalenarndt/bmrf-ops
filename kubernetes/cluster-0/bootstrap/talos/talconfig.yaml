@@ -4,7 +4,7 @@ clusterName: ${clusterName}
 endpoint: https://${clusterEndpointIP}:6443
 
 # renovate: depName=ghcr.io/siderolabs/installer datasource=docker extractVersion=^(?<version>.*)$
-talosVersion: v1.6.5
+talosVersion: v1.6.7
 # renovate: depName=kubernetes/kubernetes datasource=github-releases extractVersion=^v(?<version>.*)$
 kubernetesVersion: v1.29.2
 
@@ -136,6 +136,8 @@ controlPlane:
           - siderolabs/i915-ucode
           - siderolabs/iscsi-tools
           - siderolabs/util-linux-tools
+          - siderolabs/btrfs
+          - siderolabs/realtek-firmware
 
   patches:
     # Cluster configuration
@@ -247,14 +249,13 @@ controlPlane:
             permissions: 0o644
             content: |
               [ NFSMount_Global_Options ]
-              nfsvers=4.1
+              nfsvers=4.2
               hard=True
               noatime=True
               nodiratime=True
               rsize=131072
               wsize=131072
               nconnect=8
-
     # Custom sysctls
     - |-
       machine:

@@ -2,9 +2,11 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
+
 vars:
   # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
   PROMETHEUS_OPERATOR_VERSION: 0.73.0
+tasks:
   delete-evicted-pods:
     desc: Deletes pods with Evicted phase
     summary: |
