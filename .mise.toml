@@ -1,5 +1,5 @@
 [tools]
-talhelper = "latest"
+talhelper = "2.3.10"
 k9s = "latest"
 pre-commit = "latest"
 yamlfmt = "latest"
