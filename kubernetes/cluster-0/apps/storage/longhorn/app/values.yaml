@@ -9,11 +9,20 @@ ingress:
   ingressClassName: internal-nginx
   host: tlonghorn.${SECRET_DOMAIN}
   tls: true
+monitoring:
+  enabled: true
+  createPrometheusRules: true
 defaultSettings:
   defaultDataPath: /var/mnt/sata
   backupTarget: "nfs://172.16.0.4:/volume1/k8s/longhorn-backups"
   replicaAutoBalance: "best-effort"
   defaultDataLocality: "best-effort"
+  backupstorePollInterval: 0
+  # createDefaultDiskLabeledNodes: true - Reeval later
+  storageOverProvisioningPercentage: 100
+  storageMinimalAvailablePercentage: 10
+  orphanAutoDeletion: true
+  nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
 annotations:
   configmap.reloader.stakater.com/reload: auto
 enablePSP: false
