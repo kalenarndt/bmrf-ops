@@ -12,3 +12,9 @@ helm = "latest"
 age = "1.1.0"
 direnv = "latest"
 flux2 = "latest"
+krew = "latest"
+
+[env]
+KUBECONFIG = "{{config_root}}/kubeconfig"
+TALOSCONFIG = "{{config_root}}/kubernetes/cluster-0/bootstrap/talos/clusterconfig/talosconfig"
+SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
