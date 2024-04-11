@@ -14,7 +14,7 @@ monitoring:
   createPrometheusRules: true
 defaultSettings:
   defaultDataPath: /var/mnt/sata
-  backupTarget: "nfs://172.16.0.4:/volume1/k8s/longhorn-backups"
+  backupTarget: "nfs://storage.${SECRET_DOMAIN}:/volume1/k8s/longhorn-backups"
   replicaAutoBalance: "best-effort"
   defaultDataLocality: "best-effort"
   backupstorePollInterval: 0
