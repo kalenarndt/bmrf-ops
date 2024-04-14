@@ -34,7 +34,7 @@ nodes:
           - mountpoint: /var/mnt/sata
     networkInterfaces:
       - deviceSelector:
-          driver: e1000e
+          driver: r8169
         mtu: ${mtu}
         addresses:
           - 172.16.11.13/24
@@ -43,6 +43,9 @@ nodes:
             gateway: ${defaultGW}
         vip:
           ip: ${clusterEndpointIP}
+      - deviceSelector:
+          driver: e1000e
+        ignore: true
     patches:
       - |-
         machine:
@@ -70,7 +73,7 @@ nodes:
           - mountpoint: /var/mnt/sata
     networkInterfaces:
       - deviceSelector:
-          driver: e1000e
+          driver: r8169
         mtu: ${mtu}
         addresses:
           - 172.16.11.12/24
@@ -79,6 +82,9 @@ nodes:
             gateway: ${defaultGW}
         vip:
           ip: ${clusterEndpointIP}
+      - deviceSelector:
+          driver: e1000e
+        ignore: true
     patches:
       - |-
         machine:
@@ -106,7 +112,7 @@ nodes:
           - mountpoint: /var/mnt/sata
     networkInterfaces:
       - deviceSelector:
-          driver: e1000e
+          driver: r8169
         mtu: ${mtu}
         addresses:
           - 172.16.11.11/24
@@ -115,6 +121,9 @@ nodes:
             gateway: ${defaultGW}
         vip:
           ip: ${clusterEndpointIP}
+      - deviceSelector:
+          driver: e1000e
+        ignore: true
     patches:
       - |-
         machine:
