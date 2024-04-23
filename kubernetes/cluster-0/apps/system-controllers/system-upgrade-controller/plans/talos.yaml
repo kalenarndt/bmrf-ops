@@ -1,46 +1,34 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/upgrade.cattle.io/plan_v1.json
 apiVersion: upgrade.cattle.io/v1
 kind: Plan
 metadata:
   name: talos
 spec:
-  # renovate: depName=ghcr.io/siderolabs/installer datasource=docker extractVersion=^(?<version>.*)$
-  version: &version v1.6.7
+  version: ${TALOS_VERSION}
   serviceAccountName: system-upgrade
   secrets:
     - name: talos
       path: /var/run/secrets/talos.dev
       ignoreUpdates: true
   concurrency: 1
-  cordon: true
   exclusive: true
   nodeSelector:
     matchExpressions:
       - key: feature.node.kubernetes.io/system-os_release.ID
         operator: In
-        values:
-          - talos
+        values: ["talos"]
       - key: feature.node.kubernetes.io/system-os_release.VERSION_ID
         operator: NotIn
-        values:
-          - *version
+        values: ["${TALOS_VERSION}"]
   tolerations:
     - key: CriticalAddonsOnly
       operator: Exists
-    - key: node-role.kubernetes.io/master
-      operator: Exists
-      effect: NoSchedule
-    - key: node-role.kubernetes.io/controlplane
-      operator: Exists
-      effect: NoSchedule
     - key: node-role.kubernetes.io/control-plane
       operator: Exists
       effect: NoSchedule
-    - key: node-role.kubernetes.io/etcd
-      operator: Exists
-      effect: NoSchedule
   prepare: &prepare
-    image: ghcr.io/siderolabs/talosctl
+    image: ghcr.io/siderolabs/talosctl:${TALOS_VERSION}
     envs:
       - name: NODE_IP
         valueFrom:
@@ -55,6 +43,6 @@ spec:
     args:
       - --nodes=$(NODE_IP)
       - upgrade
-      - --image=factory.talos.dev/installer/4ea1b20f73a7b3eac7faac4a02193470a85d0e2c441af474ddfd2de2e8da4dc7:$(SYSTEM_UPGRADE_PLAN_LATEST_VERSION)
+      - --image=factory.talos.dev/installer/d7b0152eb7c48cb37db36b5ec299224b7a07e5ed9a55a3eb63c4105364f180d6:$(SYSTEM_UPGRADE_PLAN_LATEST_VERSION)
       - --preserve=true
       - --wait=false
