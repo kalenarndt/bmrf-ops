@@ -1,5 +1,5 @@
 [tools]
-talhelper = "2.3.10"
+talhelper = "latest"
 k9s = "latest"
 pre-commit = "latest"
 yamlfmt = "latest"
@@ -9,8 +9,7 @@ sops = "latest"
 kustomize = "latest"
 kubectl = "latest"
 helm = "latest"
-age = "1.1.0"
-direnv = "latest"
+age = "latest"
 flux2 = "latest"
 krew = "latest"
 

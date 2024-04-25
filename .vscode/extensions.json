@@ -5,7 +5,6 @@
         "ms-kubernetes-tools.vscode-kubernetes-tools",
         "signageos.signageos-vscode-sops",
         "redhat.ansible",
-        "mikestead.dotenv",
         "mitchdenny.ecdc",
         "redhat.vscode-yaml",
         "tamasfe.even-better-toml",
