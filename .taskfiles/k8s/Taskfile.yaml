@@ -7,33 +7,38 @@ vars:
   # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
   PROMETHEUS_OPERATOR_VERSION: 0.73.0
 tasks:
-  delete-evicted-pods:
-    desc: Deletes pods with Evicted phase
+  browse-pvc:
+    desc: Browse PersistentVolumeClaims
     summary: |
       Args:
         cluster: Cluster to run command against (required)
-    cmds:
-      - kubectl --context {{.cluster}} delete pods --field-selector status.phase=Evicted -A --ignore-not-found=true
+        ns: Namespace to browse PersistentVolumeClaims in (default: default)
+        claim: PersistentVolumeClaim to browse (required)
+    interactive: true
+    cmd: kubectl browse-pvc --context {{.cluster}} --namespace {{.ns}} {{.claim}}
+    vars:
+      ns: '{{.ns | default "default"}}'
     requires:
-      vars: ["cluster"]
+      vars: ["cluster", "claim"]
+
+  drain:
+    desc: Drain a node
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+        node: Node to drain (required)
+    cmd: kubectl --context {{.cluster}} drain {{.node}} --ignore-daemonsets --delete-local-data --force
+    requires:
+      vars: ["cluster", "node"]
 
   delete-failed-pods:
-    desc: Deletes pods with Failed phase
+    desc: Deletes pods with a fucked status
     summary: |
       Args:
         cluster: Cluster to run command against (required)
     cmds:
-      - kubectl --context {{.cluster}} delete pods --field-selector status.phase=Failed -A --ignore-not-found=true
-    requires:
-      vars: ["cluster"]
-
-  delete-succeeded-pods:
-    desc: Deletes pods with Succeeded phase
-    summary: |
-      Args:
-        cluster: Cluster to run command against (required)
-    cmds:
-      - kubectl --context {{.cluster}} delete pods --field-selector status.phase=Succeeded -A --ignore-not-found=true
+      - for: ["Evicted", "Failed", "Succeeded"]
+        cmd: kubectl --context {{.cluster}} delete pods --field-selector status.phase={{.ITEM}} -A --ignore-not-found=true
     requires:
       vars: ["cluster"]
 

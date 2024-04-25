@@ -28,9 +28,6 @@ includes:
   externalsecrets:
     taskfile: .taskfiles/externalsecrets
     dir: .taskfiles/externalsecrets
-  sops:
-    taskfile: .taskfiles/sops
-    dir: .taskfiles/sops
 
 
 tasks:
