@@ -48,13 +48,12 @@
   },
   "sops.defaults.ageKeyFile": "age.key",
   "vs-kubernetes": {
-    "vs-kubernetes.crd-code-completion": "enabled",
-    "vscode-kubernetes.kubectl-path-mac": "~/.local/share/mise/shims/kubectl",
-    "vscode-kubernetes.helm-path-mac": "~/.local/share/mise/shims/helm"
+    "vs-kubernetes.crd-code-completion": "enabled"
   },
   "yaml.schemaStore.enable": true,
   "yaml.schemas": {
     "ansible": "./ansible/**/*.yaml",
     "kubernetes": "./kubernetes/**/*.yaml"
-  }
+  },
+  "terminal.integrated.defaultProfile.osx": "zsh"
 }

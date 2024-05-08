@@ -9,7 +9,7 @@ sops = "latest"
 kustomize = "latest"
 kubectl = "latest"
 helm = "latest"
-age = "latest"
+age = "1.1.1"
 flux2 = "latest"
 krew = "latest"
 
