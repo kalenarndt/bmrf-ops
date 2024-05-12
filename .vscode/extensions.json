@@ -1,14 +1,10 @@
 {
-    "recommendations": [
-        "albert.TabOut",
-        "hashicorp.terraform",
-        "ms-kubernetes-tools.vscode-kubernetes-tools",
-        "signageos.signageos-vscode-sops",
-        "redhat.ansible",
-        "mitchdenny.ecdc",
-        "redhat.vscode-yaml",
-        "tamasfe.even-better-toml",
-        "oderwat.indent-rainbow",
-        "EditorConfig.EditorConfig"
-    ]
+  "recommendations": [
+      "ms-kubernetes-tools.vscode-kubernetes-tools",
+      "ms-vscode-remote.remote-containers",
+      "tamasfe.even-better-toml",
+      "redhat.vscode-yaml",
+      "mrmlnc.vscode-json5",
+      "pkief.material-icon-theme"
+  ]
 }

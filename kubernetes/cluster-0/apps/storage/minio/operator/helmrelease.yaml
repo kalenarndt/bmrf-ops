@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: operator
-      version: 5.0.14
+      version: 5.0.15
       interval: 30m
       sourceRef:
         kind: HelmRepository
