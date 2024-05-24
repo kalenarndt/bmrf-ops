@@ -56,8 +56,8 @@ tasks:
       vars:
         - cluster
         - controller
-    # preconditions:
-    #   - talosctl config get-contexts | grep {{.cluster}}
+    preconditions:
+      - talosctl config get-contexts | grep {{.cluster}}
 
   generate-clusterconfig:
     desc: Generate clusterconfig for Talos
@@ -80,7 +80,7 @@ tasks:
     desc: Apply clusterconfig for a Talos cluster
     vars:
       CLUSTERCONFIG_FILES:
-        sh: find {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/talos/clusterconfig -type f -name '*.yaml' -printf '%f\n'
+        sh: gfind {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/talos/clusterconfig -type f -name '*.yaml' -printf '%f\n'
     cmds:
       - for:
           var: CLUSTERCONFIG_FILES
