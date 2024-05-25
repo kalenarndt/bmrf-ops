@@ -6,10 +6,10 @@ controllers:
 
     pod:
       securityContext:
-        runAsUser: 0
-        runAsGroup: 0
-        runAsNonRoot: false
-        fsGroup: 0
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups:
           - 65542 # gladius:external-services
@@ -49,7 +49,7 @@ service:
 
 persistence:
   config:
-    existingClaim: nzbget-pvc
+    existingClaim: valheim-pvc
     advancedMounts:
       nzbget:
         app:
