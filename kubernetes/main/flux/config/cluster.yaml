@@ -40,7 +40,7 @@ spec:
     - name: flux
   postBuild:
     substituteFrom:
-      - kind: ConfigMap
+      - kind: Secret
         name: cluster-settings
         optional: false
       - kind: Secret
