@@ -14,6 +14,9 @@ deschedulerPolicy:
             nodeFit: true
         - name: RemovePodsViolatingInterPodAntiAffinity
         - name: RemovePodsViolatingNodeAffinity
+          args:
+            nodeAffinityType:
+              - requiredDuringSchedulingIgnoredDuringExecution
         - name: RemovePodsViolatingNodeTaints
         - name: RemovePodsViolatingTopologySpreadConstraint
           args:
@@ -29,6 +32,8 @@ deschedulerPolicy:
             - RemovePodsViolatingInterPodAntiAffinity
             - RemovePodsViolatingNodeAffinity
             - RemovePodsViolatingNodeTaints
+podAnnotations:
+  reloader.stakater.com/auto: "true"
 service:
   enabled: true
 serviceMonitor:
