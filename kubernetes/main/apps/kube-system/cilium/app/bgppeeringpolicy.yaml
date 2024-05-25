@@ -25,9 +25,9 @@ spec:
       neighbors:
         - peerAddress: "172.16.11.1/32" # unlike bgp-config ConfigMap, peerAddress needs to be in CIDR notation
           peerASN: 64510
-        - peerAddress: "172.16.11.1/32" # unlike bgp-config ConfigMap, peerAddress needs to be in CIDR notation
-          peerASN: 64555
-          peerPort: 1790
+        # - peerAddress: "172.16.11.1/32" # unlike bgp-config ConfigMap, peerAddress needs to be in CIDR notation
+        #   peerASN: 64555
+        #   peerPort: 1790
 
 ---
 apiVersion: "cilium.io/v2alpha1"
