@@ -1,5 +1,5 @@
 ---
-replicas: 2
+replicas: 3
 kind: Deployment
 deschedulerPolicyAPIVersion: descheduler/v1alpha2
 deschedulerPolicy:
@@ -14,9 +14,6 @@ deschedulerPolicy:
             nodeFit: true
         - name: RemovePodsViolatingInterPodAntiAffinity
         - name: RemovePodsViolatingNodeAffinity
-          args:
-            nodeAffinityType:
-              - requiredDuringSchedulingIgnoredDuringExecution
         - name: RemovePodsViolatingNodeTaints
         - name: RemovePodsViolatingTopologySpreadConstraint
           args:
@@ -33,8 +30,8 @@ deschedulerPolicy:
             - RemovePodsViolatingNodeAffinity
             - RemovePodsViolatingNodeTaints
 service:
-  enabled: true # TODO: Add later
+  enabled: true
 serviceMonitor:
-  enabled: true # TODO: Add later
+  enabled: true
 leaderElection:
   enabled: true
