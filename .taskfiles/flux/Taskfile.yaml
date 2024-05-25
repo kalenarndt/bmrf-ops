@@ -15,11 +15,6 @@ tasks:
         cluster: Cluster to run command against (required)
     prompt: Bootstrap Flux into the '{{.cluster}}' cluster... continue?
     cmds:
-      # Install essential Prometheus Operator CRDs
-      - kubectl --context {{.cluster}} apply --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{.PROMETHEUS_OPERATOR_VERSION}}/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
-      - kubectl --context {{.cluster}} apply --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{.PROMETHEUS_OPERATOR_VERSION}}/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
-      - kubectl --context {{.cluster}} apply --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{.PROMETHEUS_OPERATOR_VERSION}}/example/prometheus-operator-crd/monitoring.coreos.com_scrapeconfigs.yaml
-      - kubectl --context {{.cluster}} apply --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{.PROMETHEUS_OPERATOR_VERSION}}/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
       # Install Flux
       - kubectl --context {{.cluster}} apply --server-side --kustomize {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/flux
       # Install secrets and configmaps
@@ -53,13 +48,13 @@ tasks:
 
   apply:
     desc: Apply a resource path that contains Flux substitution variables
-    dotenv: ['{{.CLUSTER_SETTINGS_FILE}}']
+    dotyaml: ['{{.CLUSTER_SETTINGS_FILE}}']
     vars:
       ks: '{{ or .ks (fail "Missing path (`ks` var)") }}'
     cmd: |
-      sops exec-env {{.CLUSTER_SECRETS_FILE}} \
+      sops exec-yaml {{.CLUSTER_SECRETS_FILE}} \
         "kustomize build --load-restrictor=LoadRestrictionsNone {{.ks}} | \
-          envsubst | kubectl apply --server-side --field-manager=kustomize-controller -f -"
+          yamlsubst | kubectl apply --server-side --field-manager=kustomize-controller -f -"
     preconditions:
       - sh: test -f {{.CLUSTER_SECRETS_FILE}}
       - sh: test -f {{.CLUSTER_SETTINGS_FILE}}
