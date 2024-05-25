@@ -6,12 +6,12 @@ metadata:
   name: &appname valheim
   namespace: flux-system
 spec:
-  targetNamespace: downloads
+  targetNamespace: games
   commonMetadata:
     labels:
       app.kubernetes.io/name: *appname
   interval: 10m
-  path: ./kubernetes/main/apps/downloads/valheim/app/
+  path: ./kubernetes/main/apps/games/valheim/app/
   prune: true
   sourceRef:
     kind: GitRepository

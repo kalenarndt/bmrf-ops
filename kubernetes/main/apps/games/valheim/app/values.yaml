@@ -51,6 +51,8 @@ persistence:
   config:
     existingClaim: valheim-pvc
     advancedMounts:
-      nzbget:
+      valheim:
         app:
           - path: /config
+          - path: /opt/valheim
+          
