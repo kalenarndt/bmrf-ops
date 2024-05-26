@@ -15,7 +15,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: bmrf-media
+    name: bmrf-ops
   wait: true
   dependsOn:
     - name: longhorn-storage
