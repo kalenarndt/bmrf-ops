@@ -30,3 +30,4 @@ resources:
   - ./democratic-csi.yaml
   - ./crunchy-data.yaml
   - ./crunchy-userinit.yaml
+  - ./actions-runner-controller.yaml
