@@ -37,7 +37,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops-kubernetes
+    name: bmrf-ops
   wait: false
   dependsOn:
     - name: actions-runner-controller
