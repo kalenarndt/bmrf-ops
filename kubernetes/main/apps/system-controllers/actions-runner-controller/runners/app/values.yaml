@@ -10,7 +10,7 @@ containerMode:
 
 controllerServiceAccount:
   name: actions-runner-controller-gha-rs-controller
-  namespace: dev
+  namespace: system-controllers
 
 listenerTemplate:
   metadata:
