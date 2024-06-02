@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *appname
   interval: 10m
-  path: "./kubernetes/main/apps/system-controllers/actions-runner-controller/operator"
+  path: "./kubernetes/main/apps/system-controllers/actions-runner-controller/operator/app"
   prune: true
   sourceRef:
     kind: GitRepository
