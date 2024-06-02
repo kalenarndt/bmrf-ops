@@ -29,7 +29,7 @@ spec:
     keepHistory: false
   valuesFrom:
     - kind: ConfigMap
-      name: actions-runner-values
+      name: actions-runners-values
     - kind: Secret
       name: actions-runner-controller-auth
       valuesKey: github_app_id
