@@ -5,7 +5,7 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
 configMapGenerator:
-  - name: actions-runners-values
+  - name: actions-runners-bmrf-ops-values
     files:
       - values.yaml=values.yaml
 configurations:
