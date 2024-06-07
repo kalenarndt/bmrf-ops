@@ -1,6 +1,6 @@
 runnerScaleSetName: arc-runner-set-bmrf-ops
 
-githubConfigUrl: https://github.com/kalenarndt/bmrf-ops
+# githubConfigUrl: https://github.com/kalenarndt/bmrf-ops
 
 minRunners: 1
 maxRunners: 6
