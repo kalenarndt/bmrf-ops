@@ -1,0 +1,47 @@
+---
+fullnameOverride: &name externaldns-unifi
+# logLevel: debug
+provider:
+  name: webhook
+  webhook:
+    image:
+      repository: ghcr.io/kashalls/external-dns-unifi-webhook
+      tag: v0.1.0@sha256:f06ace9c46345ee2d2e901f5a392688e7f0f0da53257805928f1d4bcd1320f6f
+    env:
+      - name: UNIFI_HOST
+        value: https://${SECRET_UNIFI_HOST}
+      - name: UNIFI_USER
+        valueFrom:
+          secretKeyRef:
+            name: &secret external-dns-unifi-secret
+            key: unifi-username
+      - name: UNIFI_PASS
+        valueFrom:
+          secretKeyRef:
+            name: *secret
+            key: unifi-password
+      # - name: LOG_LEVEL
+      #   value: "debug"
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: http-wh-metrics
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: http-wh-metrics
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
+extraArgs:
+  - --ignore-ingress-tls-spec
+policy: sync
+sources: ["ingress", "service"]
+txtOwnerId: main
+txtPrefix: k8s.main.
+domainFilters: ["${SECRET_DOMAIN}"]
+serviceMonitor:
+  enabled: true
+podAnnotations:
+  reloader.stakater.com/auto: "true"
