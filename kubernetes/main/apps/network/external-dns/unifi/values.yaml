@@ -13,12 +13,12 @@ provider:
       - name: UNIFI_USER
         valueFrom:
           secretKeyRef:
-            name: &secret external-dns-unifi-secret
+            name: external-dns-unifi-secret
             key: unifi-username
       - name: UNIFI_PASS
         valueFrom:
           secretKeyRef:
-            name: *secret
+            name: external-dns-unifi-secret
             key: unifi-password
       # - name: LOG_LEVEL
       #   value: "debug"
