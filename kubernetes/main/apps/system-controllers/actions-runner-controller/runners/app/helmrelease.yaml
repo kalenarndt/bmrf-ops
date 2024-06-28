@@ -15,6 +15,9 @@ spec:
         name: actions-runner-controller
         namespace: flux-system
       interval: 30m
+  dependsOn:
+    - name: actions-runner-controller
+      namespace: system-controllers
   maxHistory: 2
   install:
     remediation:
