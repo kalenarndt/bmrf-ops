@@ -65,7 +65,7 @@ prometheus:
     ingressClassName: internal-nginx
     pathType: Prefix
     hosts:
-      - &host tprometheus.${SECRET_DOMAIN}
+      - *host
     tls:
       - hosts: [*host]
   thanosService:
