@@ -1,0 +1,58 @@
+---
+controllers:
+  valheim:
+    annotations:
+      reloader.stakater.com/auto: "true"
+
+    pod:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 65542 # gladius:external-services
+    containers:
+      app:
+        image:
+          repository: ghcr.io/lloesche/valheim-server
+          tag: latest@sha256:a44916921ab36368c2ca8b6a919930c49bc87055507453f0ffe03097bd446104
+        probes:
+          liveness:
+            enabled: true
+          readiness:
+            enabled: true
+          startup:
+            enabled: true
+            spec:
+              failureThreshold: 30
+              periodSeconds: 5
+        env:
+          VALHEIM_WORLD: "pizzaparty"
+          VALHEIM_PORT: "2456"
+          VALHEIM_PASSWORD: "fart123"
+          VALHEIM_PUBLIC: "true"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+
+service:
+  app:
+    controller: valheim
+    type: LoadBalancer
+    annotations:
+      io.cilium/lb-ipam-ips: "10.45.0.5"
+    ports:
+      http:
+        port: 2456
+
+persistence:
+  config:
+    existingClaim: valheim-pvc
+    advancedMounts:
+      valheim:
+        app:
+          - path: /config
+          - path: /opt/valheim
+          

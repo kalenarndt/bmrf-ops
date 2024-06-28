@@ -36,8 +36,6 @@ spec:
     provider: sops
     secretRef:
       name: sops-age
-  dependsOn:
-    - name: flux
   postBuild:
     substituteFrom:
       - kind: Secret
