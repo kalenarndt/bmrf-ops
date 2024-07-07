@@ -39,6 +39,7 @@ controllers:
 service:
   app:
     controller: 7dtd
+    name: sevendays
     type: LoadBalancer
     annotations:
       external-dns.alpha.kubernetes.io/hostname: sevendays.${SECRET_DOMAIN}
