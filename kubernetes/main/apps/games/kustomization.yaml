@@ -7,4 +7,4 @@ resources:
   - ./namespace.yaml
   # Flux-Kustomizations
   # - ./valheim/ks.yaml
-  - ./7dtd/ks.yaml
+  # - ./7dtd/ks.yaml
