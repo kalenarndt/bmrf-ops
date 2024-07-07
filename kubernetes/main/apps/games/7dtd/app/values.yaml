@@ -58,11 +58,12 @@ service:
         protocol: UDP
 
 persistence:
-  config:
+  files:
     existingClaim: bmrf-7dtd-pvc
     advancedMounts:
-      app:
-        - path: /home/sdtdserver/.local/share/7DaysToDie/
-          subPath: config
-        - path: /home/sdtdserver/serverfiles/
-          subPath: serverfiles
+      bmrf-7dtd:
+        app:
+          - path: /home/sdtdserver/.local/share/7DaysToDie/
+            subPath: config
+          - path: /home/sdtdserver/serverfiles/
+            subPath: serverfiles
