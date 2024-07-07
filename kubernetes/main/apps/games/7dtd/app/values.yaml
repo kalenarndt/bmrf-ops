@@ -30,7 +30,7 @@ controllers:
               periodSeconds: 5
         env:
           VERSION: latest_experimental
-          CHANGE_CONFIG_DIR_OWNERSHIP: false
+          CHANGE_CONFIG_DIR_OWNERSHIP: true
           TZ: ${TZ}
         securityContext:
           allowPrivilegeEscalation: false
