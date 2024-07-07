@@ -32,6 +32,7 @@ controllers:
           VERSION: latest_experimental
           CHANGE_CONFIG_DIR_OWNERSHIP: true
           TZ: ${TZ}
+          START_MODE: 1
         securityContext:
           allowPrivilegeEscalation: true
           readOnlyRootFilesystem: false
