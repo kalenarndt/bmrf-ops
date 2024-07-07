@@ -63,7 +63,3 @@ persistence:
     existingClaim: 7dtd-pvc
     globalMounts:
       - path: /home/sdtdserver/.local/share/7DaysToDie/
-  files:
-    existingClaim: 7dtd-pvc
-    globalMounts:
-      - path: /home/sdtdserver/serverfiles/
