@@ -1,0 +1,67 @@
+---
+controllers:
+  7dtd:
+    annotations:
+      reloader.stakater.com/auto: "true"
+
+    pod:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 65542 # gladius:external-services
+    containers:
+      app:
+        image:
+          repository: vinanrra/7dtd-server
+          tag: latest
+        probes:
+          liveness:
+            enabled: true
+          readiness:
+            enabled: true
+          startup:
+            enabled: true
+            spec:
+              failureThreshold: 30
+              periodSeconds: 5
+        env:
+          VERSION: latest_experimental
+          CHANGE_CONFIG_DIR_OWNERSHIP: false
+          TZ: ${TZ}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+
+service:
+  app:
+    controller: 7dtd
+    type: LoadBalancer
+    annotations:
+      io.cilium/lb-ipam-ips: "10.45.0.7"
+    ports:
+      http:
+        port: 26900
+        protocol: TCP
+      http2:
+        port: 26900
+        protocol: UDP
+      server1:
+        port: 26901
+        protocol: UDP
+      server2:
+        port: 26902
+        protocol: UDP
+
+persistence:
+  config:
+    existingClaim: 7dtd-pvc
+    globalMounts:
+      - path: /home/sdtdserver/.local/share/7DaysToDie/
+  files:
+    existingClaim: 7dtd-pvc
+    globalMounts:
+      - path: /home/sdtdserver/serverfiles/
