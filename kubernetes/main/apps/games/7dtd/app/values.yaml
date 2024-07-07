@@ -60,9 +60,9 @@ service:
 persistence:
   config:
     existingClaim: bmrf-7dtd-pvc
-    globalMounts:
-      - path: /home/sdtdserver/.local/share/7DaysToDie/
-  files:
-    existingClaim: bmrf-7dtd-pvc
-    globalMounts:
-      - path: /home/sdtdserver/serverfiles/
+    advancedMounts:
+      app:
+        - path: /home/sdtdserver/.local/share/7DaysToDie/
+          subPath: config
+        - path: /home/sdtdserver/serverfiles/
+          subPath: serverfiles
