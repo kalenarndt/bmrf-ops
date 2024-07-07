@@ -1,6 +1,6 @@
 ---
 controllers:
-  7dtd:
+  bmrf-7dtd:
     annotations:
       reloader.stakater.com/auto: "true"
 
@@ -38,10 +38,9 @@ controllers:
 
 service:
   app:
-    controller: 7dtd
+    controller: bmrf-7dtd
     type: LoadBalancer
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: sevendays.${SECRET_DOMAIN}
       io.cilium/lb-ipam-ips: "10.45.0.7"
     ports:
       http:
@@ -59,6 +58,6 @@ service:
 
 persistence:
   config:
-    existingClaim: 7dtd-pvc
+    existingClaim: bmrf-7dtd-pvc
     globalMounts:
       - path: /home/sdtdserver/.local/share/7DaysToDie/

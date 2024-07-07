@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: 7dtd
+  name: bmrf-7dtd
 spec:
   interval: 30m
   chart:
@@ -29,4 +29,4 @@ spec:
     keepHistory: false
   valuesFrom:
     - kind: ConfigMap
-      name: 7dtd-values
+      name: bmrf-7dtd-values
