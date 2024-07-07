@@ -6,13 +6,13 @@ controllers:
 
     pod:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
+        runAsUser: 0
+        runAsGroup: 0
+        runAsNonRoot: false
+        fsGroup: 0
         fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups:
-          - 65542 # gladius:external-services
+        # supplementalGroups:
+        #   - 65542 # gladius:external-services
     containers:
       app:
         image:
@@ -33,7 +33,7 @@ controllers:
           CHANGE_CONFIG_DIR_OWNERSHIP: true
           TZ: ${TZ}
         securityContext:
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
           readOnlyRootFilesystem: false
 
 service:
