@@ -8,3 +8,4 @@ resources:
   # Flux-Kustomizations
   # - ./valheim/ks.yaml
   - ./7dtd/ks.yaml
+  - ./terraria/ks.yaml
