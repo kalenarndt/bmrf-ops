@@ -28,6 +28,9 @@ controllers:
             spec:
               failureThreshold: 30
               periodSeconds: 5
+        env:
+          - name: world
+            value: Dome_of_Understanding.wld
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
