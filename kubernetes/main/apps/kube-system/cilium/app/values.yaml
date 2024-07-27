@@ -17,8 +17,9 @@ bgpControlPlane:
 
 rollOutCiliumPods: true
 localRedirectPolicy: true
-
-k8sServiceHost: localhost # Kubeprism
+envoy:
+  enabled: false
+k8sServiceHost: 127.0.0.1 # Kubeprism
 k8sServicePort: 7445 # Kubeprism
 kubeProxyReplacement: true
 kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
@@ -54,17 +55,16 @@ operator:
 autoDirectNodeRoutes: true
 ipv4NativeRoutingCIDR: 10.244.0.0/16
 routingMode: native
-containerRuntime:
-  integration: containerd
+enableRuntimeDeviceDetection: true
 
 hubble:
   enabled: true
   serviceMonitor:
-    enabled: false
+    enabled: true
 
   metrics:
     enabled:
-      - dns:query;ignoreAAAA
+      - dns:query
       - drop
       - tcp
       - flow

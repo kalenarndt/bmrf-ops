@@ -1,39 +1,96 @@
+# ---
+# apiVersion: cilium.io/v2alpha1
+# kind: CiliumBGPPeeringPolicy
+# metadata:
+#   name: bgp-loadbalancer-ip-main
+#   namespace: kube-system
+# spec:
+#   nodeSelector:
+#     matchLabels:
+#       kubernetes.io/os: "linux" # match all Linux nodes, change this to match more granularly if more than 1 PeeringPolicy is to be used throughout cluster
+#   virtualRouters:
+#     - localASN: 64512
+#       exportPodCIDR: false
+#       serviceSelector: # this replaces address-pools, instead of defining the range of IPs that can be assigned to LoadBalancer services, now services have to match below selectors for their LB IPs to be announced
+#         matchExpressions:
+#           - {
+#               key: thisFakeSelector,
+#               operator: NotIn,
+#               values: ["will-match-and-announce-all-services"],
+#             }
+#       neighbors:
+#         - peerAddress: "172.16.11.1/32" # unlike bgp-config ConfigMap, peerAddress needs to be in CIDR notation
+#           peerASN: 64510
 ---
 apiVersion: cilium.io/v2alpha1
-kind: CiliumBGPPeeringPolicy
-# comments courtesy of JJGadgets
-# MAKE SURE CRDs ARE INSTALLED IN CLUSTER VIA cilium-config ConfigMap OR Cilium HelmRelease/values.yaml (bgpControlPlane.enabled: true), BEFORE THIS IS APPLIED!
-# "CiliumBGPPeeringPolicy" Custom Resource will replace the old MetalLB BGP's "bgp-config" ConfigMap
-# "CiliumBGPPeeringPolicy" is used with `bgpControlPlane.enabled: true` which uses GoBGP, NOT the old `bgp.enabled: true` which uses MetalLB
+kind: CiliumBGPClusterConfig
 metadata:
-  name: bgp-loadbalancer-ip-main
+  name: cilium-bgp
   namespace: kube-system
 spec:
   nodeSelector:
-    matchLabels:
-      kubernetes.io/os: "linux" # match all Linux nodes, change this to match more granularly if more than 1 PeeringPolicy is to be used throughout cluster
-  virtualRouters:
-    - localASN: 64512
-      exportPodCIDR: false
-      serviceSelector: # this replaces address-pools, instead of defining the range of IPs that can be assigned to LoadBalancer services, now services have to match below selectors for their LB IPs to be announced
+    matchExpressions:
+      - {
+          key: thisFakeSelector,
+          operator: NotIn,
+          values: ["will-match-and-announce-all-services"],
+        }
+  bgpInstances:
+  - name: cluster
+    localASN: 64512
+    peers:
+    - name: unifi
+      peerASN: 64510
+      peerAddress: '172.16.11.1/32'
+      peerConfigRef:
+        name: unifi
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPPeerConfig
+metadata:
+  name: unifi
+  namespace: kube-system
+spec:
+  families:
+    - afi: ipv4
+      safi: unicast
+      advertisements:
+        matchLabels:
+          advertise: "bgp"
+  gracefulRestart:
+    enabled: true
+    restartTimeSeconds: 30
+  timers:
+    connectRetryTimeSeconds: 12
+    holdTimeSeconds: 9
+    keepAliveTimeSeconds: 3
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPAdvertisement
+metadata:
+  name: cilium-advert
+  labels:
+    advertise: bgp
+spec:
+  advertisements:
+    - advertisementType: "Service"
+      service:
+        addresses:
+          - LoadBalancerIP
+      selector:
         matchExpressions:
           - {
               key: thisFakeSelector,
               operator: NotIn,
               values: ["will-match-and-announce-all-services"],
             }
-      neighbors:
-        - peerAddress: "172.16.11.1/32" # unlike bgp-config ConfigMap, peerAddress needs to be in CIDR notation
-          peerASN: 64510
-        # - peerAddress: "172.16.11.1/32" # unlike bgp-config ConfigMap, peerAddress needs to be in CIDR notation
-        #   peerASN: 64555
-        #   peerPort: 1790
-
 ---
-apiVersion: "cilium.io/v2alpha1"
+---
+# yaml-language-server: $schema=https://lds-schemas.pages.dev/cilium.io/ciliumloadbalancerippool_v2alpha1.json
+apiVersion: cilium.io/v2alpha1
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: main-pool
 spec:
-  cidrs:
+  blocks:
     - cidr: 10.45.0.1/24
