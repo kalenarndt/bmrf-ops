@@ -29,10 +29,11 @@ controllers:
               failureThreshold: 30
               periodSeconds: 5
         env:
-          VERSION: latest_experimental
+          VERSION: stable
           CHANGE_CONFIG_DIR_OWNERSHIP: true
           TZ: ${TZ}
           START_MODE: 1
+          BACKUP: YES
         securityContext:
           allowPrivilegeEscalation: true
           readOnlyRootFilesystem: false
@@ -56,6 +57,9 @@ service:
       server2:
         port: 26902
         protocol: UDP
+      server3:
+        port: 8080
+        protocol: TCP
 
 persistence:
   files:
