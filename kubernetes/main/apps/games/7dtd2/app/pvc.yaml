@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bmrf-7dtd2-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: lh-two-retain-backup-standard
+  resources:
+    requests:
+      storage: 20Gi
