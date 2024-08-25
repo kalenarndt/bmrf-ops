@@ -33,6 +33,7 @@ controllers:
           CHANGE_CONFIG_DIR_OWNERSHIP: true
           TZ: ${TZ}
           START_MODE: 1
+          MONITOR: YES
           BACKUP: YES
         securityContext:
           allowPrivilegeEscalation: true
