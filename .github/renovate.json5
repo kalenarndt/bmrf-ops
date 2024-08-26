@@ -1,18 +1,26 @@
 {
-  $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: [
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
     "github>kalenarndt/renovate-config",
     "github>kalenarndt/renovate-config:automerge-github-actions",
-    "github>kalenarndt/bmrf-ops//.github/renovate/groups.json5"
+    "github>kalenarndt/bmrf-ops//.github/renovate/groups.json5",
+    "github>kalenarndt/bmrf-ops//.github/renovate/customManagers.json5"
   ],
-  ignorePaths: ["^.archive/**"],
-  flux: {
-    fileMatch: ["^kubernetes/.+\\.ya?ml$"],
+  "ignorePaths": ["^.archive/**"],
+  "flux": {
+    "fileMatch": [
+      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+    ]
   },
   "helm-values": {
-    fileMatch: ["^kubernetes/.+\\.ya?ml$"],
+    "fileMatch": [
+      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+    ]
   },
-  kubernetes: {
-    fileMatch: ["^kubernetes/.+\\.ya?ml$"],
-  },
+  "kubernetes": {
+    "fileMatch": [
+      "(^|/)\\.taskfiles/.+\\.ya?ml(?:\\.j2)?$",
+      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+    ]
+  }
 }
