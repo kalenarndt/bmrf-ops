@@ -5,7 +5,7 @@ metadata:
   name: bmrf-7dtd2-pvc
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: lh-two-retain-backup-standard
   resources:
     requests:
