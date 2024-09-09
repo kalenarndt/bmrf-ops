@@ -13,7 +13,7 @@ spec:
       interval: 30m
       sourceRef:
         kind: HelmRepository
-        name: bernd-schorgers
+        name: bjw-s
         namespace: flux-system
 
   values:
@@ -66,13 +66,13 @@ spec:
         enabled: true
         className: "internal-nginx"
         hosts:
-          - host: &host "minio.bernd-schorgers.dev"
+          - host: &host "minio.bjw-s.dev"
             paths:
               - path: /
                 service:
                   name: main
                   port: http
-          - host: &host "s3.bernd-schorgers.dev"
+          - host: &host "s3.bjw-s.dev"
             paths:
               - path: /
                 service:
