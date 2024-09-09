@@ -13,5 +13,5 @@ spec:
       interval: 30m
       sourceRef:
         kind: HelmRepository
-        name: bernd-schorgers
+        name: bjw-s
         namespace: flux-system
