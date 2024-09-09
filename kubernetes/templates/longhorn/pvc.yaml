@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "${APP}"
+spec:
+  accessModes: ["${LONGHORN_:-ReadWriteOnce}"]
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: "${APP}-dst"
+  resources:
+    requests:
+      storage: "${VOLSYNC_CAPACITY}"
+  storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bmrf-7dtd2-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: lh-two-retain-backup-standard
+  resources:
+    requests:
+      storage: 20Gi
