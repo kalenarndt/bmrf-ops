@@ -14,7 +14,8 @@
   },
   "helm-values": {
     "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$",
+      "(^|/)kubernetes/.+/values\\.yaml$"
     ]
   },
   "kubernetes": {
