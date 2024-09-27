@@ -1,4 +1,7 @@
 ---
+image:
+  repository: ghcr.io/jfroy/spegel
+  tag: "0.0.24-jfroy.3"
 spegel:
   containerdSock: /run/containerd/containerd.sock
   containerdRegistryConfigPath: /etc/cri/conf.d/hosts
