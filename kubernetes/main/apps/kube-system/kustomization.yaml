@@ -9,4 +9,4 @@ resources:
   - ./cilium/ks.yaml
   - ./metrics-server/ks.yaml
   - ./coredns/ks.yaml
-  # - ./spegel/ks.yaml
+  - ./spegel/ks.yaml
