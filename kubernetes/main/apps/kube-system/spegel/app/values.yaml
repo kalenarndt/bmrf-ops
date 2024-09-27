@@ -1,8 +1,10 @@
 ---
+## TODO: Remove hack image when https://github.com/spegel-org/spegel/pull/581 is merged
+image:
+  repository: ghcr.io/deedee-ops/spegel-hack
+  digest: "sha256:7de27625da39e0524982c3075c1bc724224dedd2f6b2f3cf51535a943a3a8586"
 spegel:
-  image:
-    repository: ghcr.io/jfroy/spegel
-    tag: "0.0.24-jfroy.3"
+  appendMirrors: true
   spegel:
     containerdSock: /run/containerd/containerd.sock
     containerdRegistryConfigPath: /etc/cri/conf.d/hosts
