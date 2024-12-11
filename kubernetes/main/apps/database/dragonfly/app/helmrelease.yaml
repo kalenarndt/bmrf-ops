@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: dragonfly
-      version: v1.25.4
+      version: v1.25.5
       sourceRef:
         kind: HelmRepository
         name: dragonfly
