@@ -1,11 +1,11 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
-clusterName: main
+clusterName: &clusterName expanse
 endpoint: https://${clusterEndpointIP}:6443
 
-# renovate: depName=ghcr.io/siderolabs/installer datasource=docker extractVersion=^(?<version>.*)$
+# renovate: depName=ghcr.io/siderolabs/installer datasource=docker
 talosVersion: v1.8.4
-# renovate: depName=kubernetes/kubernetes datasource=github-releases extractVersion=^v(?<version>.*)$
+# renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
 kubernetesVersion: 1.31.3
 
 allowSchedulingOnMasters: true
@@ -14,11 +14,12 @@ cniConfig:
 
 additionalApiServerCertSans: &san
   - ${clusterName}.${clusterDomain}
-  - "127.0.0.1" # KubePrism https://www.talos.dev/v1.6/kubernetes-guides/configuration/kubeprism/
+  - ${clusterEndpointIP}
+  - 127.0.0.1 # KubePrism https://www.talos.dev/v1.6/kubernetes-guides/configuration/kubeprism/
 additionalMachineCertSans: *san
 
 nodes:
-  - hostname: talos03.${clusterDomain}
+  - hostname: eros.${clusterDomain}
     ipAddress: 172.16.11.13
     installDiskSelector:
       size: "<=256GB"
@@ -29,7 +30,7 @@ nodes:
           - mountpoint: /var/mnt/sata
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: 58:47:ca:7a:c2:82
+          hardwareAddr: 58:47:ca:79:7b:c8
           driver: i40e
         mtu: ${mtu}
         addresses:
@@ -40,7 +41,7 @@ nodes:
         vip:
           ip: ${clusterEndpointIP}
       - deviceSelector:
-          driver: e1000e
+          driver: igc
         ignore: true
     patches:
       - &kubelet_extra_mounts |-
@@ -54,77 +55,20 @@ nodes:
                   - rbind
                   - rshared
                   - rw
-  - hostname: talos02.${clusterDomain}
-    ipAddress: 172.16.11.12
-    installDiskSelector:
-      size: "<=600GB"
-    controlPlane: true
-    kernelModules:
-      - name: br_netfilter
-        parameters:
-          - nf_conntrack_max=131072
-    machineDisks:
-      - device: /dev/sda
-        partitions:
-          - mountpoint: /var/mnt/sata
-    networkInterfaces:
-      - deviceSelector:
-          driver: r8169
-        mtu: ${mtu}
-        addresses:
-          - 172.16.11.12/24
-        routes:
-          - network: 0.0.0.0/0
-            gateway: ${defaultGW}
-        vip:
-          ip: ${clusterEndpointIP}
-      - deviceSelector:
-          driver: e1000e
-        ignore: true
-    patches:
-      - *kubelet_extra_mounts
-  - hostname: talos01.${clusterDomain}
-    ipAddress: 172.16.11.11
-    installDiskSelector:
-      size: "<=600GB"
-    controlPlane: true
-    kernelModules:
-      - name: br_netfilter
-        parameters:
-          - nf_conntrack_max=131072
-    machineDisks:
-      - device: /dev/sda
-        partitions:
-          - mountpoint: /var/mnt/sata
-    networkInterfaces:
-      - deviceSelector:
-          driver: r8169
-        mtu: ${mtu}
-        addresses:
-          - 172.16.11.11/24
-        routes:
-          - network: 0.0.0.0/0
-            gateway: ${defaultGW}
-        vip:
-          ip: ${clusterEndpointIP}
-      - deviceSelector:
-          driver: e1000e
-        ignore: true
-    patches:
-      - *kubelet_extra_mounts
 
 controlPlane:
 
   schematic:
     customization:
       extraKernelArgs:
-        - apparmor=0
-        - mitigations=off
-        - init_on_alloc=0
-        - init_on_free=0
-        - intel_iommu=on
-        - iommu=pt
-        - security=none
+        - apparmor=0           # Less security, more speed
+        - init_on_alloc=0      # Less security, more speed
+        - init_on_free=0       # Less security, more speed
+        - intel_iommu=on       # PCI Passthrough
+        - iommu=pt             # PCI Passthrough
+        - mitigations=off      # Less security, more speed
+        - security=none        # Less security, more speed
+        - net.ifnames=1        # Enable predictable NIC naming
 
       systemExtensions:
         officialExtensions:
