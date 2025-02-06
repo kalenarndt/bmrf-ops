@@ -4,9 +4,9 @@ clusterName: &clusterName expanse
 endpoint: https://${clusterEndpointIP}:6443
 
 # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
-talosVersion: v1.8.4
+talosVersion: v1.9.2
 # renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
-kubernetesVersion: 1.31.3
+kubernetesVersion: 1.32.1
 
 allowSchedulingOnMasters: true
 cniConfig:
@@ -22,19 +22,19 @@ nodes:
   - hostname: eros.${clusterDomain}
     ipAddress: 172.16.11.13
     installDiskSelector:
-      size: "<=256GB"
+      name: /dev/nvme0n1
     controlPlane: true
     machineDisks:
-      - device: /dev/sda
+      - device: /dev/nvme1n1
         partitions:
-          - mountpoint: /var/mnt/sata
+          - mountpoint: /var/mnt/data
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: 58:47:ca:79:7b:c8
+          hardwareAddr: 58:47:ca:7a:8b:2a
           driver: i40e
         mtu: ${mtu}
         addresses:
-          - 172.16.11.13/24
+          - 172.16.11.21/24
         routes:
           - network: 0.0.0.0/0
             gateway: ${defaultGW}
@@ -48,9 +48,9 @@ nodes:
         machine:
           kubelet:
             extraMounts:
-              - destination: /var/mnt/sata
+              - destination: /var/mnt/data
                 type: bind
-                source: /var/mnt/sata
+                source: /var/mnt/data
                 options:
                   - rbind
                   - rshared
@@ -209,7 +209,8 @@ controlPlane:
           net.ipv4.tcp_rmem: 4096 87380 33554432 # 10Gb/s
           net.ipv4.tcp_wmem: 4096 65536 33554432 # 10Gb/s
           net.ipv4.tcp_window_scaling: 1         # 10Gb/s
-          vm.nr_hugepages: 1024                  # OpenEBS
+          net.ipv4.tcp_fastopen: 3               # Send and accept data in the opening SYN packet
+          vm.nr_hugepages: 1024                  # PostgresSQL
 
     # Custom sysfs settings
     - |-
@@ -236,3 +237,21 @@ controlPlane:
           devices.system.cpu.cpu17.cpufreq.energy_performance_preference: balance_performance
           devices.system.cpu.cpu18.cpufreq.energy_performance_preference: balance_performance
           devices.system.cpu.cpu19.cpufreq.energy_performance_preference: balance_performance
+
+    # Configure udev rules
+    - |-
+      machine:
+        udev:
+          rules:
+            # Thunderbolt
+            - ACTION=="add", SUBSYSTEM=="thunderbolt", ATTR{authorized}=="0", ATTR{authorized}="1"
+            # Intel GPU
+            - SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"
+
+    # v2 Longhorn rules
+    - |-
+      machine:
+        kernel:
+          modules:
+            - name: nvme_tcp
+            - name: vfio_pci
