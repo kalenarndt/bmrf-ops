@@ -1,0 +1,42 @@
+---
+coder:
+  podAnnotations:
+    reloader.stakater.com/auto: "true"
+
+  env:
+    - name: CODER_ACCESS_URL
+      value: "https://coder.${SECRET_DOMAIN}"
+    - name: CODER_WILDCARD_ACCESS_URL
+      value: '*.coder.${SECRET_DOMAIN}'
+    - name: CODER_PG_CONNECTION_URL
+      valueFrom:
+        secretKeyRef:
+          name: coder-postgresql-user
+          key: connection-url
+    - name: CODER_OAUTH2_GITHUB_ALLOW_EVERYONE
+      value: "true"
+    - name: CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS
+      value: "true"
+    # - name: CODER_OAUTH2_GITHUB_ALLOWED_ORGS
+    #   value: "bmrf-ops"
+    - name: CODER_OAUTH2_GITHUB_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: coder-github-flow
+          key: client-id
+    - name: CODER_OAUTH2_GITHUB_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: coder-github-flow
+          key: client-secret
+  ingress:
+    enable: true
+    className: "internal-nginx"
+    host: coder.${SECRET_DOMAIN}
+  service:
+    enable: true
+    type: ClusterIP
+    tls:
+      enable: true
+      secretName: ${SECRET_DOMAIN}-tls
+      wildcardSecretName: ${SECRET_DOMAIN}-tls

@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: longhorn-storage
+  namespace: flux-system
+spec:
+  interval: 30m
+  path: "./kubernetes/main/apps/storage/longhorn/app"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: bmrf-ops
+  wait: true
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: longhorn-storage-jobs
+  namespace: flux-system
+spec:
+  interval: 30m
+  path: "./kubernetes/main/apps/storage/longhorn/jobs"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: bmrf-ops
+  wait: true
+  dependsOn:
+    - name: longhorn-storage
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: longhorn-storage-classes
+  namespace: flux-system
+spec:
+  interval: 30m
+  path: "./kubernetes/main/apps/storage/longhorn/storage-classes"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: bmrf-ops
+  wait: true
+  dependsOn:
+    - name: longhorn-storage

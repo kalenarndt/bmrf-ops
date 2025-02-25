@@ -1,0 +1,72 @@
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPClusterConfig
+metadata:
+  name: cilium-bgp
+  namespace: kube-system
+spec:
+  nodeSelector:
+    matchExpressions:
+      - {
+          key: thisFakeSelector,
+          operator: NotIn,
+          values: ["will-match-and-announce-all-services"],
+        }
+  bgpInstances:
+  - name: cluster
+    localASN: 64512
+    peers:
+    - name: unifi
+      peerASN: 64510
+      peerAddress: '172.16.11.1'
+      peerConfigRef:
+        name: unifi
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPPeerConfig
+metadata:
+  name: unifi
+  namespace: kube-system
+spec:
+  families:
+    - afi: ipv4
+      safi: unicast
+      advertisements:
+        matchLabels:
+          advertise: "bgp"
+  gracefulRestart:
+    enabled: true
+    restartTimeSeconds: 30
+  timers:
+    connectRetryTimeSeconds: 12
+    holdTimeSeconds: 9
+    keepAliveTimeSeconds: 3
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPAdvertisement
+metadata:
+  name: cilium-advert
+  labels:
+    advertise: bgp
+spec:
+  advertisements:
+    - advertisementType: "Service"
+      service:
+        addresses:
+          - LoadBalancerIP
+      selector:
+        matchExpressions:
+          - {
+              key: thisFakeSelector,
+              operator: NotIn,
+              values: ["will-match-and-announce-all-services"],
+            }
+---
+# yaml-language-server: $schema=https://lds-schemas.pages.dev/cilium.io/ciliumloadbalancerippool_v2alpha1.json
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: main-pool
+spec:
+  blocks:
+    - cidr: 10.45.0.1/24

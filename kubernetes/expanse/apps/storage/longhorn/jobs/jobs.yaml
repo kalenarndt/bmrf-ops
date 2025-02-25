@@ -1,0 +1,70 @@
+---
+apiVersion: longhorn.io/v1beta1
+kind: RecurringJob
+metadata:
+  name: snapshot-hourly-retain-day
+  namespace: longhorn-system
+spec:
+  cron: "0 * * * *" # Every hour, on the hour
+  task: "snapshot"
+  groups:
+    - backup-standard
+    - snapshot-hourly-retain-day
+  retain: 3
+  concurrency: 5
+  labels:
+    snapshot.k8s.bmrf.io/job-name: snapshot-hourly-retain-day
+    snapshot.k8s.bmrf.io/schedule: hourly
+    snapshot.k8s.bmrf.io/retain: "3"
+---
+apiVersion: longhorn.io/v1beta1
+kind: RecurringJob
+metadata:
+  name: snapshot-daily-retain-week
+  namespace: longhorn-system
+spec:
+  cron: "0 0 * * *" # 00:00 every day
+  task: "snapshot"
+  groups:
+    - snapshot-daily-retain-week
+  retain: 7
+  concurrency: 10
+  labels:
+    snapshot.k8s.bmrf.io/job-name: snapshot-daily-retain-week
+    snapshot.k8s.bmrf.io/schedule: daily
+    snapshot.k8s.bmrf.io/retain: "7"
+---
+apiVersion: longhorn.io/v1beta1
+kind: RecurringJob
+metadata:
+  name: backup-daily-retain-week
+  namespace: longhorn-system
+spec:
+  cron: "0 0 * * *" # 00:00 every day
+  task: "backup"
+  groups:
+    - backup-standard
+    - backup-daily-retain-week
+  retain: 7
+  concurrency: 10
+  labels:
+    backup.k8s.bmrf.io/job-name: backup-daily-retain-week
+    backup.k8s.bmrf.io/schedule: daily
+    backup.k8s.bmrf.io/retain: "7"
+---
+apiVersion: longhorn.io/v1beta1
+kind: RecurringJob
+metadata:
+  name: backup-weekly-retain-month
+  namespace: longhorn-system
+spec:
+  cron: "0 0 * * 7/1" # 00:00 on Sat
+  task: "backup"
+  groups:
+    - backup-weekly-retain-month
+  retain: 4
+  concurrency: 10
+  labels:
+    backup.k8s.bmrf.io/job-name: backup-weekly-retain-month
+    backup.k8s.bmrf.io/schedule: daily
+    backup.k8s.bmrf.io/retain: "4"

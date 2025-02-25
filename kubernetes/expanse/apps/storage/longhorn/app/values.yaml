@@ -1,0 +1,28 @@
+---
+persistence:
+  defaultClass: false
+service:
+  ui:
+    type: ClusterIP
+ingress:
+  enabled: true
+  ingressClassName: internal-nginx
+  host: tlonghorn.${SECRET_DOMAIN}
+  tls: false
+monitoring:
+  enabled: true
+  createPrometheusRules: true
+defaultSettings:
+  defaultDataPath: /var/mnt/sata
+  backupTarget: "nfs://storage.${SECRET_DOMAIN}:/volume1/k8s/longhorn-backups"
+  replicaAutoBalance: "best-effort"
+  defaultDataLocality: "best-effort"
+  backupstorePollInterval: 0
+  # createDefaultDiskLabeledNodes: true - Reeval later
+  storageOverProvisioningPercentage: 100
+  storageMinimalAvailablePercentage: 10
+  orphanAutoDeletion: true
+  nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+annotations:
+  configmap.reloader.stakater.com/reload: auto
+enablePSP: false

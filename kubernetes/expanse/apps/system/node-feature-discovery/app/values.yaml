@@ -1,0 +1,20 @@
+---
+nodeFeatureRule:
+  createCRD: true
+worker:
+  annotations:
+    configmap.reloader.stakater.com/reload: auto
+  resources:
+    requests:
+      cpu: 5m
+      memory: 48Mi
+    limits:
+      memory: 48Mi
+  config:
+    core:
+      sources:
+        - system
+        - pci
+        - usb
+prometheus:
+  enable: true

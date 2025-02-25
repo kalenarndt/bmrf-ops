@@ -1,0 +1,71 @@
+# https://github.com/longhorn/longhorn/blob/master/examples/storageclass.yaml
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: lh-one-delete
+provisioner: driver.longhorn.io
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "1"
+  staleReplicaTimeout: "30"
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: lh-two-delete
+provisioner: driver.longhorn.io
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "2"
+  staleReplicaTimeout: "30"
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: lh-two-retain
+provisioner: driver.longhorn.io
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "2"
+  staleReplicaTimeout: "30"
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: lh-three-retain
+provisioner: driver.longhorn.io
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "2"
+  staleReplicaTimeout: "30"
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: lh-two-retain-backup-standard # hourly-daily
+provisioner: driver.longhorn.io
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "2"
+  staleReplicaTimeout: "30"
+  fromBackup: ""
+  recurringJobSelector: '[{"name":"backup-standard", "isGroup":true}]'
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: lh-three-retain-backup-standard # hourly-daily
+provisioner: driver.longhorn.io
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "3"
+  staleReplicaTimeout: "30"
+  fromBackup: ""
+  recurringJobSelector: '[{"name":"backup-standard", "isGroup":true}]'

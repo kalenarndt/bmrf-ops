@@ -1,0 +1,54 @@
+---
+fullnameOverride: &name externaldns-external
+
+domainFilters:
+  - ${SECRET_DOMAIN}
+
+env:
+  - name: CF_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: externaldns-external-secrets
+        key: cloudflare-api-token
+
+extraArgs:
+  - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
+  - --crd-source-kind=DNSEndpoint
+  - --cloudflare-proxied
+  - --ingress-class=external-nginx
+
+podAnnotations:
+  secret.reloader.stakater.com/reload: externaldns-external-secrets
+  configmap.reloader.stakater.com/reload: auto
+
+policy: sync
+provider: cloudflare
+
+resources:
+  requests:
+    cpu: 13m
+    memory: 42M
+  limits:
+    memory: 42M
+
+serviceMonitor:
+  enabled: true
+
+sources:
+  - ingress
+  - crd
+
+txtOwnerId: main
+txtPrefix: "k8s."
+
+postRenderers:
+  - kustomize:
+    patches:
+      - target:
+          version: v1
+          kind: Deployment
+          name: *name
+        patch: |
+          - op: add
+            path: /spec/template/spec/enableServiceLinks
+            value: false

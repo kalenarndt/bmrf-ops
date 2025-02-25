@@ -1,20 +1,21 @@
 [tools]
-talhelper = "3.0.17"
+talhelper = "3.0.19"
 k9s = "latest"
 pre-commit = "latest"
 yamlfmt = "latest"
 task = "latest"
-talosctl = "latest"
+talosctl = "1.9.4"
 sops = "latest"
 kustomize = "latest"
 kubectl = "latest"
-helm = "3.16.4"
+helm = "3.17.1"
 age = "1.1.1"
 flux2 = "latest"
 krew = "latest"
-helmfile = "1.0.0-rc.0"
+helmfile = "0.171.0"
 
 [env]
-KUBECONFIG = "{{config_root}}/kubeconfig"
-TALOSCONFIG = "{{config_root}}/kubernetes/main/bootstrap/talos/clusterconfig/talosconfig"
+KUBECONFIG = "{{config_root}}/kubernetes/expanse/bootstrap/talos/clusterconfig/kubeconfig"
+TALOSCONFIG = "{{config_root}}/kubernetes/expanse/bootstrap/talos/clusterconfig/talosconfig"
 SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
+KUBERNETES_DIR = '{{config_root}}/kubernetes'

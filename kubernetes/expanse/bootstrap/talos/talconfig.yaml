@@ -1,14 +1,16 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+
 clusterName: &clusterName expanse
-endpoint: https://${clusterEndpointIP}:6443
+endpoint: https://${clusterName}.${clusterDomain}:6443
 
 # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
-talosVersion: v1.9.2
+talosVersion: v1.9.4
 # renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
-kubernetesVersion: 1.32.1
-
+kubernetesVersion: 1.31.5
 allowSchedulingOnMasters: true
+allowSchedulingOnControlPlanes: true
+
 cniConfig:
   name: none
 
@@ -16,14 +18,17 @@ additionalApiServerCertSans: &san
   - ${clusterName}.${clusterDomain}
   - ${clusterEndpointIP}
   - 127.0.0.1 # KubePrism https://www.talos.dev/v1.6/kubernetes-guides/configuration/kubeprism/
+
 additionalMachineCertSans: *san
 
 nodes:
+
   - hostname: eros.${clusterDomain}
-    ipAddress: 172.16.11.13
-    installDiskSelector:
-      name: /dev/nvme0n1
+    ipAddress: 172.16.12.21
     controlPlane: true
+    installDisk: /dev/nvme0n1
+    disableSearchDomain: true
+    nameservers: ["${dnsIP}"]
     machineDisks:
       - device: /dev/nvme1n1
         partitions:
@@ -34,7 +39,7 @@ nodes:
           driver: i40e
         mtu: ${mtu}
         addresses:
-          - 172.16.11.21/24
+          - 172.16.12.21/24
         routes:
           - network: 0.0.0.0/0
             gateway: ${defaultGW}
@@ -43,20 +48,37 @@ nodes:
       - deviceSelector:
           driver: igc
         ignore: true
-    patches:
-      - &kubelet_extra_mounts |-
-        machine:
-          kubelet:
-            extraMounts:
-              - destination: /var/mnt/data
-                type: bind
-                source: /var/mnt/data
-                options:
-                  - rbind
-                  - rshared
-                  - rw
+
+  - hostname: ceres.${clusterDomain}
+    ipAddress: 172.16.12.22
+    controlPlane: true
+    installDisk: /dev/nvme0n1
+    disableSearchDomain: true
+    nameservers: ["${dnsIP}"]
+    machineDisks:
+      - device: /dev/nvme1n1
+        partitions:
+          - mountpoint: /var/mnt/data
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: 58:47:ca:79:7b:c8
+          driver: i40e
+        mtu: ${mtu}
+        addresses:
+          - 172.16.12.22/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: ${defaultGW}
+        vip:
+          ip: ${clusterEndpointIP}
+      - deviceSelector:
+          driver: igc
+        ignore: true
 
 controlPlane:
+  nodeLabels:
+    topology.kubernetes.io/region: *clusterName
+    topology.kubernetes.io/zone: m
 
   schematic:
     customization:
@@ -69,76 +91,35 @@ controlPlane:
         - mitigations=off      # Less security, more speed
         - security=none        # Less security, more speed
         - net.ifnames=1        # Enable predictable NIC naming
+        - talos.auditd.disabled=1 # SPEED
 
       systemExtensions:
         officialExtensions:
-          - siderolabs/i915-ucode
           - siderolabs/intel-ucode
+          - siderolabs/i915
           - siderolabs/mei
           - siderolabs/thunderbolt
           - siderolabs/iscsi-tools
           - siderolabs/util-linux-tools
 
   patches:
-    # Cluster configuration
-    - |-
-      cluster:
-        allowSchedulingOnMasters: true
-        proxy:
-          disabled: true
 
-    # Disable coreDNS because we are deploying with helmfile and managing with flux
-    - |-
-      cluster:
-        coreDNS:
-          disabled: true
-
-    # ETCD configuration
-    - |-
-      cluster:
-        etcd:
-          advertisedSubnets:
-            - 172.16.11.0/24
-
-    # Disable default API server admission plugins.
-    - |-
-      - op: remove
-        path: /cluster/apiServer/admissionControl
-
-    # Force nameserver
+    # Enable host dns
     - |-
       machine:
-        network:
-          nameservers:
-            - ${dnsIP}
+        features:
+          hostDNS:
+            enabled: true
+            resolveMemberNames: true
+            forwardKubeDNSToHost: false
 
-    # Configure NTP
     - |-
       machine:
         time:
           disabled: false
-          servers:
-            - time.google.com
+          servers: [time.google.com]
+          bootTimeout: 2m0s
 
-    # Disable search domain everywhere
-    - |-
-      machine:
-        network:
-          disableSearchDomain: true
-
-    # Configure cluster loopback
-    - |-
-      machine:
-        network:
-          extraHostEntries:
-            - ip: ${clusterEndpointIP}
-              aliases:
-                - ${clusterName}.${clusterDomain}
-            - ip: ${storageIP}
-              aliases:
-                - storage.${clusterDomain}
-
-    # Enable KubePrism
     - |-
       machine:
         features:
@@ -146,15 +127,68 @@ controlPlane:
             enabled: true
             port: 7445
 
-    # Kubelet configuration
+    # Configure kubelet
     - |-
       machine:
         kubelet:
-          extraArgs:
-            rotate-server-certificates: "true"
+          extraConfig:
+            maxPods: 150
           nodeIP:
             validSubnets:
-            - 172.16.11.0/24
+                - 172.16.12.0/24
+
+    # Configure etcd
+    - |-
+      cluster:
+        etcd:
+          advertisedSubnets:
+            - 172.16.12.0/24
+
+
+    # Enable MutatingAdmissionPolicy
+    - |-
+      cluster:
+        apiServer:
+          extraArgs:
+            enable-aggregator-routing: true
+            runtime-config: admissionregistration.k8s.io/v1alpha1=true
+            feature-gates: MutatingAdmissionPolicy=true
+
+    # Longhorn hostpath in kubelet
+    - |-
+      machine:
+        kubelet:
+          extraMounts:
+            - destination: /var/mnt/data
+              type: bind
+              source: /var/mnt/data
+              options:
+                - rbind
+                - rshared
+                - rw
+
+    # Configure cluster
+    - |-
+      cluster:
+        allowSchedulingOnControlPlanes: true
+        coreDNS:
+            disabled: true
+        proxy:
+          disabled: true
+        scheduler:
+          config:
+            apiVersion: kubescheduler.config.k8s.io/v1
+            kind: KubeSchedulerConfiguration
+            profiles:
+              - schedulerName: default-scheduler
+                pluginConfig:
+                  - name: PodTopologySpread
+                    args:
+                      defaultingType: List
+                      defaultConstraints:
+                        - maxSkew: 1
+                          topologyKey: kubernetes.io/hostname
+                          whenUnsatisfiable: ScheduleAnyway
 
     # Configure containerd
     - |-
@@ -167,24 +201,13 @@ controlPlane:
                 [plugins."io.containerd.grpc.v1.cri"]
                   enable_unprivileged_ports = true
                   enable_unprivileged_icmp = true
-                [plugins."io.containerd.grpc.v1.cri".containerd]
-                  discard_unpacked_layers = false
-                [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-                  discard_unpacked_layers = false
+              [plugins."io.containerd.grpc.v1.cri".containerd]
+                discard_unpacked_layers = false
+              [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+                discard_unpacked_layers = false
 
-    # Enable K8s Talos API Access
-    - |-
-      machine:
-        features:
-          kubernetesTalosAPIAccess:
-            enabled: true
-            allowedRoles:
-              - os:admin
-            allowedKubernetesNamespaces:
-              - system-controllers
-
-    # Configure nfs mount options
-    - |-
+    # Configure NFS mount options
+    - |
       machine:
         files:
           - op: overwrite
@@ -194,9 +217,39 @@ controlPlane:
               [ NFSMount_Global_Options ]
               nfsvers=4.2
               hard=True
-              nconnect=16
               noatime=True
-    # Custom sysctls
+              nconnect=16
+
+    # Configure static host entries
+    - |-
+      machine:
+        network:
+          extraHostEntries:
+            - ip: ${clusterEndpointIP}
+              aliases:
+                - ${clusterName}.${clusterDomain}
+            - ip: ${storageIP}
+              aliases:
+                - storage.${clusterDomain}
+
+
+    # Cluster configuration
+    - |-
+      cluster:
+        apiServer:
+          extraArgs:
+            feature-gates:  AuthorizeNodeWithSelectors=false
+            audit-log-path: "/dev/null"
+            enable-aggregator-routing: true
+          auditPolicy:
+            apiVersion: audit.k8s.io/v1
+            kind: Policy
+            rules:
+              - level: None
+        proxy:
+          disabled: true
+
+    # Configure custom sysctls
     - |-
       machine:
         sysctls:
@@ -212,7 +265,6 @@ controlPlane:
           net.ipv4.tcp_fastopen: 3               # Send and accept data in the opening SYN packet
           vm.nr_hugepages: 1024                  # PostgresSQL
 
-    # Custom sysfs settings
     - |-
       machine:
         sysfs:
@@ -238,20 +290,30 @@ controlPlane:
           devices.system.cpu.cpu18.cpufreq.energy_performance_preference: balance_performance
           devices.system.cpu.cpu19.cpufreq.energy_performance_preference: balance_performance
 
-    # Configure udev rules
+    # Disable default API server admission plugins.
+    - |-
+      - op: remove
+        path: /cluster/apiServer/admissionControl
+
+    # Enable K8s Talos API Access
+    - |-
+      machine:
+        features:
+          kubernetesTalosAPIAccess:
+            enabled: true
+            allowedRoles:
+              - os:admin
+            allowedKubernetesNamespaces:
+              - actions-runner-system
+              - kube-system
+              - system-upgrade
+
     - |-
       machine:
         udev:
           rules:
-            # Thunderbolt
-            - ACTION=="add", SUBSYSTEM=="thunderbolt", ATTR{authorized}=="0", ATTR{authorized}="1"
             # Intel GPU
             - SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"
+            # Coral Edge M.2 TPU
+            - SUBSYSTEM=="apex", KERNEL=="apex*", GROUP="44", MODE="0660"
 
-    # v2 Longhorn rules
-    - |-
-      machine:
-        kernel:
-          modules:
-            - name: nvme_tcp
-            - name: vfio_pci
