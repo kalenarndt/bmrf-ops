@@ -31,15 +31,6 @@ jobs:
           token: "${{ steps.app-token.outputs.token }}"
           fetch-depth: 0
 
-      - name: Get Changed Clusters
-        id: changed-clusters
-        uses: tj-actions/changed-files@v45
-        with:
-          files: kubernetes/**
-          dir_names: true
-          dir_names_max_depth: 2
-          matrix: true
-
       - name: List All Changed Clusters
         run: echo "${{ steps.changed-clusters.outputs.all_changed_and_modified_files }}"
 
