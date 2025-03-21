@@ -6,7 +6,7 @@ provider:
   webhook:
     image:
       repository: ghcr.io/kashalls/external-dns-unifi-webhook
-      tag: v0.4.0@sha256:f71f9e64f723a1af77e9ecdcbaef2db2095721d33b385baee1848d0bf09d44e7
+      tag: v0.5.1@sha256:fc031337a83e3a7d5f3407c931373455fe6842e085b47e4bb1e73708cb054b06
     env:
       - name: UNIFI_HOST
         value: https://${SECRET_UNIFI_HOST}
